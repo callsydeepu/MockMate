@@ -23,6 +23,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+console.log("[DEBUG] app.js - process.env.SESSION_SECRET:", process.env.SESSION_SECRET);
 app.use(
   session({
     secret: process.env.SESSION_SECRET,

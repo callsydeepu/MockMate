@@ -40,15 +40,16 @@ router.get(
   "/google/callback",
 
   passport.authenticate("google", {
-    failureRedirect: "/login",
+    failureRedirect: `${process.env.FRONTEND_URL || "http://localhost:5173"}/login`,
     session: true,
   }),
 
   async (req, res) => {
     const token = generateToken(req.user._id);
 
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
     res.redirect(
-      `http://localhost:5173/oauth-success?token=${token}`
+      `${frontendUrl}/oauth-success?token=${token}`
     );
   }
 );
@@ -63,15 +64,16 @@ router.get(
 router.get(
   "/github/callback",
   passport.authenticate("github", {
-    failureRedirect: "/login",
+    failureRedirect: `${process.env.FRONTEND_URL || "http://localhost:5173"}/login`,
     session: true,
   }),
   async (req, res) => {
     console.log("[DEBUG] GitHub OAuth Callback - User authenticated successfully:", req.user._id);
     const token = generateToken(req.user._id);
     console.log("[DEBUG] GitHub OAuth Callback - Generated JWT:", token);
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
     res.redirect(
-      `http://localhost:5173/oauth-success?token=${token}`
+      `${frontendUrl}/oauth-success?token=${token}`
     );
   }
 );
