@@ -43,7 +43,7 @@ export interface InterviewReport {
   eyeContactRatio: number; // percentage
   performanceLevel: string;
   performanceTags: string[];
-  transcriptSummary: { question: string; answer: string; feedback: string; score: number }[];
+  transcriptSummary: { question: string; answer: string; expectedAnswer?: string; feedback: string; score: number }[];
   suggestions: string[];
 }
 
@@ -61,6 +61,7 @@ interface InterviewContextType {
   toggleCamera: () => void;
   toggleMic: () => void;
   appendTranscript: (text: string) => void;
+  submitCurrentAnswer: (answer: string) => Promise<boolean>;
   endInterview: () => Promise<InterviewReport>;
   clearSession: () => void;
 }
@@ -555,6 +556,43 @@ export const InterviewProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     });
   };
 
+  const submitCurrentAnswer = async (answer: string): Promise<boolean> => {
+    if (!activeSession) return false;
+    const { currentQuestionIndex, questions } = activeSession;
+    const currentQ = questions[currentQuestionIndex];
+
+    try {
+      console.log(`[DEBUG] Submitting answer for question index ${currentQuestionIndex}: "${answer}"`);
+      
+      // If we have a backend interview active, submit the answer to Mongoose
+      if (activeSession.backendInterviewId) {
+        await interviewService.submitAnswer(activeSession.backendInterviewId, currentQuestionIndex, answer);
+      }
+
+      // Save answer to frontend transcripts state
+      setActiveSession((prev) => {
+        if (!prev) return null;
+        const updatedTranscripts = {
+          ...prev.transcripts,
+          [currentQ.id]: answer,
+        };
+        const updated = {
+          ...prev,
+          transcripts: updatedTranscripts,
+        };
+        localStorage.setItem('mockmate_active_interview_session', JSON.stringify(updated));
+        return updated;
+      });
+
+      toast.success("Answer saved & synchronized!");
+      return true;
+    } catch (err) {
+      console.error("[DEBUG] Error submitting answer:", err);
+      toast.error("Failed to save answer to backend database.");
+      return false;
+    }
+  };
+
   const endInterview = async (): Promise<InterviewReport> => {
     setIsSubmittingSession(true);
     // Simulate scoring calculations
@@ -658,7 +696,9 @@ export const InterviewProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             ...generatedReport,
             fillerWordCount: finalReport.fillerWordCount,
             eyeContactRatio: finalReport.eyeContactRatio,
-            transcriptSummary: finalReport.transcriptSummary,
+            transcriptSummary: generatedReport.transcriptSummary && generatedReport.transcriptSummary.length > 0
+              ? generatedReport.transcriptSummary
+              : finalReport.transcriptSummary,
             suggestions: finalReport.suggestions,
           };
 
@@ -699,6 +739,7 @@ export const InterviewProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         toggleCamera,
         toggleMic,
         appendTranscript,
+        submitCurrentAnswer,
         endInterview,
         clearSession,
       }}

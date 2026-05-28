@@ -24,6 +24,13 @@ interface BackendReport {
   interview?: BackendInterview;
   createdAt: string;
   updatedAt: string;
+  questionBreakdown?: Array<{
+    question: string;
+    userAnswer: string;
+    expectedAnswer: string;
+    score: number;
+    feedback: string;
+  }>;
 }
 
 export interface ReportViewModel {
@@ -45,6 +52,7 @@ export interface ReportViewModel {
   transcriptSummary: Array<{
     question: string;
     answer: string;
+    expectedAnswer?: string;
     feedback: string;
     score: number;
   }>;
@@ -92,12 +100,21 @@ const mapBackendReportToViewModel = (report: BackendReport): ReportViewModel => 
     dateLabel: formatDateLabel(reportDate),
     performanceLevel: resolvePerformanceLevel(report.overallScore ?? 0),
     transcriptSummary:
-      report.interview?.questions?.map((item, index) => ({
-        question: item.question,
-        answer: item.answer || '[No answer provided]',
-        feedback: report.feedback || 'Review your answer and improve depth and structure.',
-        score: Math.max((report.overallScore ?? 0) - index * 2, 0),
-      })) ?? [],
+      report.questionBreakdown && report.questionBreakdown.length > 0
+        ? report.questionBreakdown.map((item) => ({
+            question: item.question,
+            answer: item.userAnswer || '[No answer provided]',
+            expectedAnswer: item.expectedAnswer || '',
+            feedback: item.feedback,
+            score: item.score,
+          }))
+        : report.interview?.questions?.map((item, index) => ({
+            question: item.question,
+            answer: item.answer || '[No answer provided]',
+            expectedAnswer: '',
+            feedback: report.feedback || 'Review your answer and improve depth and structure.',
+            score: Math.max((report.overallScore ?? 0) - index * 2, 0),
+          })) ?? [],
   };
 };
 

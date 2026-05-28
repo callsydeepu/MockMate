@@ -20,6 +20,13 @@ interface BackendReport {
   feedback: string;
   interview?: BackendInterview;
   createdAt: string;
+  questionBreakdown?: Array<{
+    question: string;
+    userAnswer: string;
+    expectedAnswer: string;
+    score: number;
+    feedback: string;
+  }>;
 }
 
 const mapBackendReportToInterviewReport = (report: BackendReport): InterviewReport => {
@@ -48,15 +55,24 @@ const mapBackendReportToInterviewReport = (report: BackendReport): InterviewRepo
     performanceLevel,
     performanceTags: [...(report.strengths || []), ...(report.weaknesses || [])],
     transcriptSummary:
-      interview?.questions?.map((question, index) => ({
-        question: question.question,
-        answer: question.answer || '[No answer provided] ',
-        feedback: report.feedback,
-        score:
-          index === 0
-            ? report.overallScore
-            : Math.max(0, report.overallScore - index * 2),
-      })) || [],
+      report.questionBreakdown && report.questionBreakdown.length > 0
+        ? report.questionBreakdown.map((item) => ({
+            question: item.question,
+            answer: item.userAnswer || '[No answer provided]',
+            expectedAnswer: item.expectedAnswer || '',
+            feedback: item.feedback,
+            score: item.score,
+          }))
+        : interview?.questions?.map((question, index) => ({
+            question: question.question,
+            answer: question.answer || '[No answer provided]',
+            expectedAnswer: '',
+            feedback: report.feedback,
+            score:
+              index === 0
+                ? report.overallScore
+                : Math.max(0, report.overallScore - index * 2),
+          })) || [],
     suggestions: [report.feedback, ...(report.weaknesses || [])].filter(Boolean),
   };
 };

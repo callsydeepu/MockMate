@@ -9,49 +9,12 @@ import { toast } from 'react-hot-toast';
 import { WebcamPanel } from '../../components/interview/WebcamPanel';
 import { MicrophonePanel } from '../../components/interview/MicrophonePanel';
 import { QuestionCard } from '../../components/interview/QuestionCard';
-import { TranscriptPanel } from '../../components/interview/TranscriptPanel';
 import { ConfidenceMeter } from '../../components/interview/ConfidenceMeter';
 import { InterviewControls } from '../../components/interview/InterviewControls';
 import { SessionSummaryModal } from '../../components/interview/SessionSummaryModal';
 
-const MOCK_ANSWERS: { [key: string]: string[] } = {
-  g_q1: [
-    "In my last project, we had a disagreement regarding architecture.",
-    "Specifically, one developer wanted to use vanilla CSS, and I suggested Tailwind for speed.",
-    "We resolved it by scheduling a spike session to evaluate both options.",
-    "We concluded that Tailwind saved us time, and agreed to proceed."
-  ],
-  g_q2: [
-    "To solve the contiguous subarray, I would map 0s to -1s and keep a running sum.",
-    "I would store the first index of each sum in a hash map.",
-    "If the sum repeats, it means the elements in between add up to zero.",
-    "Thus, we find the longest stretch, which takes O(N) time complexity."
-  ],
-  g_q3: [
-    "Google Autocomplete requires low latency and high availability.",
-    "I would store prefix trees or Tries inside a Redis cluster at the edge.",
-    "To index new queries, I'd buffer logs into Kafka to aggregate them offline.",
-    "This reduces real-time database queries and supports millions of lookups."
-  ],
-  a_q1: [
-    "During my internship, a client API was crashing under load.",
-    "We didn't have historical request parameters, so I had to make assumptions.",
-    "I enabled debug tracing on staging to catch logs manually.",
-    "This bias for action allowed us to patch the crash before users noticed."
-  ],
-  a_q2: [
-    "To find the first non-repeating character, we need a frequency map.",
-    "We count occurrences in a single pass of the string.",
-    "In a second pass, we check the first character with a count of one.",
-    "This is O(N) time and O(1) space since character set is fixed (ASCII 256)."
-  ],
-  gen_q1: [
-    "I want to join MockMate because interview prep is highly stressful.",
-    "MockMate's AI coaches can help candidates gain confidence in low-risk setups.",
-    "My React skills and passion for tech make me an excellent fit to build features.",
-    "I want to help engineering students crack placements."
-  ]
-};
+
+
 
 const InterviewRoom: React.FC = () => {
   const { 
@@ -62,7 +25,7 @@ const InterviewRoom: React.FC = () => {
     resumeInterview,
     toggleCamera, 
     toggleMic, 
-    appendTranscript,
+    submitCurrentAnswer,
     endInterview,
     clearSession,
     isSubmittingSession,
@@ -135,48 +98,39 @@ const InterviewRoom: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [currentReport, setCurrentReport] = useState<any>(null);
 
+  // Controlled typed answer state variables
+  const [typedAnswer, setTypedAnswer] = useState('');
+  const [isSubmittingAnswer, setIsSubmittingAnswer] = useState(false);
+  const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
+
+  // Sync state when active session or current question changes
   useEffect(() => {
-    let wordInterval: any = null;
-
-    if (activeSession && activeSession.isActive && !activeSession.isPaused) {
+    if (activeSession) {
       const currentQ = activeSession.questions[activeSession.currentQuestionIndex];
-      const mockAnswersArray = MOCK_ANSWERS[currentQ.id] || (
-        currentQ.category === 'behavioral' ? [
-          "That is a great behavioral question.",
-          "In my previous projects, I experienced a similar challenge with a teammate.",
-          "I used a collaborative, STAR-based structured communication style.",
-          "This resolved our conflict and ensured high quality delivery on time."
-        ] : currentQ.category === 'system-design' ? [
-          "For this system design problem, I would first gather technical constraints.",
-          "I'd partition the system into high-availability microservices.",
-          "We can cache volatile query trends using Redis at the edge layers.",
-          "This ensures sub-100ms response times and handles scale perfectly."
-        ] : [
-          "To answer this technical question, let's explore its core concepts.",
-          "In my stack, this is managed with efficient, scalable methods.",
-          "We must balance compute constraints with spatial complexity metrics.",
-          "This approach guarantees thread-safety and mitigates edge-case leaks."
-        ]
-      );
-      let sentenceIndex = 0;
-
-      // Every 5 seconds, append a sentence to simulate user speaking
-      wordInterval = setInterval(() => {
-        if (sentenceIndex < mockAnswersArray.length) {
-          appendTranscript(mockAnswersArray[sentenceIndex] + ' ');
-          sentenceIndex++;
-        }
-      }, 5000);
+      const existingAnswer = activeSession.transcripts[currentQ.id] || '';
+      setTypedAnswer(existingAnswer);
+      setIsAnswerSubmitted(existingAnswer.trim().length > 0);
     }
+  }, [activeSession?.currentQuestionIndex, activeSession?.questions]);
 
-    return () => {
-      if (wordInterval) clearInterval(wordInterval);
-    };
-  }, [
-    activeSession?.isActive, 
-    activeSession?.isPaused, 
-    activeSession?.currentQuestionIndex
-  ]);
+  const handleSubmitAnswerClick = async () => {
+    if (!typedAnswer.trim()) {
+      toast.error('Please enter an answer before submitting!');
+      return;
+    }
+    
+    setIsSubmittingAnswer(true);
+    try {
+      const ok = await submitCurrentAnswer(typedAnswer);
+      if (ok) {
+        setIsAnswerSubmitted(true);
+      }
+    } catch (err) {
+      console.error('[DEBUG] Failed to submit typed answer:', err);
+    } finally {
+      setIsSubmittingAnswer(false);
+    }
+  };
 
   const handleStart = () => {
     startInterview(company, role, parseInt(duration, 10));
@@ -517,9 +471,67 @@ const InterviewRoom: React.FC = () => {
             totalQuestions={activeSession.questions.length}
           />
 
-          <TranscriptPanel
-            transcript={activeSession.transcripts[currentQuestion.id] || ''}
-          />
+          {/* Typed Answer Response Panel */}
+          <div className="glass-card flex flex-col justify-between border-white/5 p-5 space-y-4 rounded-2xl bg-slate-900/40 backdrop-blur-md">
+            <div className="flex justify-between items-center pb-2 border-b border-white/5">
+              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Your Response Space</span>
+              {isAnswerSubmitted ? (
+                <span className="inline-flex items-center gap-1 text-[8px] font-bold text-emerald-400 border border-emerald-400/20 bg-emerald-400/5 px-2 py-0.5 rounded uppercase font-mono">
+                  Saved & Synced
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 text-[8px] font-bold text-yellow-400 border border-yellow-400/20 bg-yellow-400/5 px-2 py-0.5 rounded uppercase font-mono">
+                  Awaiting Submission
+                </span>
+              )}
+            </div>
+
+            <textarea
+              value={typedAnswer}
+              onChange={(e) => setTypedAnswer(e.target.value)}
+              disabled={isSubmittingAnswer || activeSession.isPaused}
+              placeholder="Type your structured, comprehensive answer here... Try to elaborate on technical edge cases, architecture decisions, and explain your thought process clearly!"
+              className="w-full flex-grow p-4 text-xs bg-slate-950/60 border border-white/10 rounded-xl text-white focus:outline-none focus:border-violet-500 disabled:opacity-50 min-h-[140px] resize-none leading-relaxed font-sans"
+            />
+
+            <div className="flex justify-between items-center pt-2 border-t border-white/5">
+              <span className="text-[9px] text-slate-500 font-mono">
+                Character count: {typedAnswer.length}
+              </span>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={handleSubmitAnswerClick}
+                loading={isSubmittingAnswer}
+                disabled={isSubmittingAnswer || activeSession.isPaused || !typedAnswer.trim()}
+                className="rounded-xl px-4 py-2 text-xs font-bold bg-violet-600 hover:bg-violet-500 transition-all shadow-md shadow-violet-500/10"
+              >
+                {isAnswerSubmitted ? "Update Stored Answer" : "Submit Answer"}
+              </Button>
+            </div>
+          </div>
+
+          {/* Previous Answers Timeline Preview */}
+          {activeSession.currentQuestionIndex > 0 && (
+            <div className="glass-card p-5 border-white/5 space-y-4 rounded-2xl bg-slate-900/30">
+              <h3 className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Previous Responses Timeline</h3>
+              <div className="space-y-4 max-h-[160px] overflow-y-auto scrollbar-thin pr-1">
+                {activeSession.questions.slice(0, activeSession.currentQuestionIndex).map((q, idx) => (
+                  <div key={q.id} className="p-4 rounded-xl border border-white/5 bg-slate-950/40 space-y-2.5 text-xs">
+                    <div className="flex justify-between items-center text-[9px] font-mono text-cyan-400 uppercase font-bold">
+                      <span>Question 0{idx + 1} • {q.category}</span>
+                      <span className="text-slate-500">{q.difficulty}</span>
+                    </div>
+                    <p className="text-slate-300 font-bold leading-relaxed">"{q.text}"</p>
+                    <div className="p-3 rounded-lg border border-white/5 bg-slate-900/30 text-[11px] text-emerald-400 leading-relaxed font-sans">
+                      <span className="text-[8px] font-mono text-emerald-400 uppercase font-black block tracking-wider mb-1">Your Submitted Response</span>
+                      "{activeSession.transcripts[q.id] || '[No answer recorded]'}"
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -531,6 +543,7 @@ const InterviewRoom: React.FC = () => {
         isFirstQuestion={activeSession.currentQuestionIndex === 0}
         isLastQuestion={activeSession.currentQuestionIndex === activeSession.questions.length - 1}
         isGeneratingNext={isGeneratingNext}
+        isAnswerSubmitted={isAnswerSubmitted}
         onToggleCamera={toggleCamera}
         onToggleMic={toggleMic}
         onPause={pauseInterview}

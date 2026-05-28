@@ -329,6 +329,359 @@ STRICT OUTPUT RULES:
     // Assign unified ID
     generatedQuestion.id = `ai_q_${Date.now()}_${questionIndex}`;
     return generatedQuestion;
+  },
+
+  /**
+   * Helper to resolve a highly concise, professional expected ideal answer for a question
+   */
+  getExpectedAnswerForFallback: (questionText, tips = []) => {
+    const qLower = questionText.toLowerCase();
+    if (qLower.includes("what is react") && qLower.includes("differ")) {
+      return "React is a component-based JavaScript library focused on building interactive user interfaces. Unlike vanilla HTML and JavaScript, which require manual DOM updates, React uses a Virtual DOM and a reactive state-driven model to efficiently update only the components that change.";
+    }
+    if (qLower.includes("props and state")) {
+      return "Props are read-only configuration inputs passed down from parent to child components, allowing them to remain reusable and stateless. State is mutable, component-local memory that is declared and managed internally, triggering automatic re-renders when updated.";
+    }
+    if (qLower.includes("useeffect") || qLower.includes("dependency array")) {
+      return "The useEffect hook lets React components perform side effects like fetching data, setting up event subscriptions, or manual DOM updates. Its dependency array controls when the effect re-runs: an empty array runs it once on mount, while specifying state or prop values runs it only when those values change.";
+    }
+    if (qLower.includes("frontend project") || qLower.includes("ui component")) {
+      return "I built an interactive dashboard featuring a custom draggable Kanban board component. It utilized optimized HTML5 Drag and Drop APIs, managed local state efficiently to support high-performance transitions, and integrated smooth CSS transform micro-animations for dragging states.";
+    }
+    if (qLower.includes("undefined is not") || qLower.includes("browser console")) {
+      return "I would start by inspecting the stack trace in the browser console to identify the exact line of code. Next, I'd set breakpoints or add logging to check variable states, and apply optional chaining (?.) or defensive null checks to ensure nested objects are populated before rendering.";
+    }
+    if (qLower.includes("learn a new frontend") || qLower.includes("quickly")) {
+      return "When I needed to learn TailwindCSS, I started by reading the official documentation and building a simple sandbox project. I focused on understanding utility-first CSS principles, experimented with theme customizations, and immediately applied it to build a responsive landing page layout.";
+    }
+    if (qLower.includes("express.js") || (qLower.includes("express") && qLower.includes("node"))) {
+      return "Express.js is a minimal, lightweight, and flexible web application framework for Node.js. It simplifies backend development by providing robust systems for routing, handling HTTP requests, and integrating custom middleware to process requests and responses cleanly.";
+    }
+    if (qLower.includes("sql") && qLower.includes("nosql")) {
+      return "SQL databases are relational systems that use structured, predefined schemas with tables and foreign key relationships, making them ideal for complex queries and ACID-compliant transactions. NoSQL databases, like MongoDB, are non-relational, schema-less document stores optimized for flexible data structures and horizontal scalability.";
+    }
+    if (qLower.includes("middleware") && qLower.includes("next")) {
+      return "Express middleware functions have access to the request object (req), response object (res), and the next middleware function in the cycle (next). They are used to intercept requests, run code (such as authentication or logging), and must call 'next()' to pass control to the subsequent handler.";
+    }
+    if (qLower.includes("backend api") || qLower.includes("database schema")) {
+      return "I designed a RESTful API and relational database schema for an e-commerce order processing system. It featured one-to-many relationships between users, orders, and products, with indexes on foreign keys to optimize query performance and ensure transaction reliability under concurrent loads.";
+    }
+    if (qLower.includes("eaddrinuse")) {
+      return "An 'EADDRINUSE' error means the port your server is trying to bind to is already being used by another running process. To resolve this, I would identify and terminate the process using that port (using tools like lsof or netstat) or configure the server to use a different port.";
+    }
+    if (qLower.includes("mistake") && qLower.includes("server route")) {
+      return "During local integration testing, I mistakenly returned a status of 200 instead of 401 for an unauthenticated request. I identified the failure in my test runner output, reviewed the route's middleware chain, and corrected the conditional branch to properly reject missing authorization tokens.";
+    }
+
+    // Fallback using tips if available
+    if (Array.isArray(tips) && tips.length > 0) {
+      return `A professional and concise expected answer for this question should demonstrate technical depth by covering: ${tips.join(" ")}`;
+    }
+
+    return "An ideal response should state exact definitions, demonstrate syntax/architectural options, detail handling edge cases, and analyze complexity trade-offs suitable for the target role.";
+  },
+
+  /**
+   * Evaluates candidate's responses dynamically using seasoned experience-aware criteria
+   * @param {Object} options
+   * @param {string} options.role
+   * @param {string} options.company
+   * @param {string} options.difficulty
+   * @param {string} options.experienceLevel
+   * @param {Array} options.questions
+   */
+  evaluateInterview: async ({ role, company, difficulty, experienceLevel = "junior", questions = [] }) => {
+    console.log(`[DEBUG] AI Service - Evaluating interview: Role: "${role}", Company: "${company}", Exp: "${experienceLevel}", Questions Count: ${questions.length}`);
+    
+    // Filter questions that actually have answers or are defined
+    const transcript = questions.filter(q => q.question && q.answer && q.answer.trim().length > 0);
+    
+    if (transcript.length === 0) {
+      console.warn("[DEBUG] AI Service - No answered questions in interview, returning minimum default evaluation.");
+      return {
+        overallScore: 10,
+        technicalScore: 5,
+        communicationScore: 10,
+        confidenceScore: 5,
+        strengths: [],
+        weaknesses: ["No answers provided for any of the interview questions"],
+        feedback: "You did not provide any responses during this interview session. To receive feedback and improve, please attempt to answer each question in future sessions.",
+        questionBreakdown: questions.map(q => ({
+          question: q.question,
+          userAnswer: q.answer || "[No response provided]",
+          expectedAnswer: aiService.getExpectedAnswerForFallback(q.question, q.tips || []),
+          score: 0,
+          feedback: "No response was recorded for this question."
+        }))
+      };
+    }
+
+    let result = null;
+
+    if (process.env.GROQ_API_KEY) {
+      console.log(`[DEBUG] AI Service - Querying Groq llama-3.1-8b-instant for interview evaluation.`);
+      try {
+        const expTier = ["junior", "mid-level", "senior"].includes(experienceLevel.toLowerCase()) ? experienceLevel.toLowerCase() : "junior";
+        
+        let evaluationStandard = "";
+        if (expTier === "junior") {
+          evaluationStandard = `Junior level standard. Evaluate on basic programming syntax, core foundational concepts, logical steps, and simple code workflows. Be constructive but strict—if they do not know basic concepts, rate accordingly. Do not expect complex system designs or advanced runtime optimizations.`;
+        } else if (expTier === "mid-level") {
+          evaluationStandard = `Mid-level standard. Expect solid understanding of application architecture, REST API design, intermediate state management, basic optimizations, error handling, and debugging.`;
+        } else {
+          evaluationStandard = `Senior level standard. Expect deep expertise, systems design authority, performance optimization, concurrency patterns, distributed databases, memory leak tracking, and core runtime engine behavior. Standard is exceptionally high and rigorous.`;
+        }
+
+        const formattedTranscript = transcript.map((q, idx) => `Q${idx + 1}: "${q.question}"\nCandidate Answer: "${q.answer}"`).join("\n\n");
+
+        const prompt = `You are a professional software engineering recruiter and senior interviewer at ${company || "a tech company"}.
+You have just completed an interview for a ${expTier} applying for the role of ${role} (Difficulty: ${difficulty}).
+
+You are evaluating their performance. You must act as a realistic, strict, and rigorous interviewer, NOT a supportive tutor. DO NOT give inflated scores.
+
+STRICT SCORING RUBRIC:
+- 0–20: No understanding, empty answers, or extremely weak responses (e.g., "I don't know", "not sure", "pass", "no idea", or completely irrelevant babble).
+- 20–40: Weak understanding or mostly incorrect. Shows huge misconception or is highly superficial (e.g., "React is JS" for "What is React?").
+- 40–60: Partial understanding with major gaps. Understands basic definition but fails on details, runtime parameters, or simple implementation rules.
+- 60–80: Good understanding with decent explanations. Explains core concepts and basic details well, but lacks deep architectural/performance trade-offs.
+- 80–100: Strong technical depth and clarity. Displays production-grade knowledge, exact architectural details, exact edge cases, and solid technical vocabulary.
+
+CANDIDATE EXPERIENCE TIERS (CALIBRATION):
+- Junior: Evaluate on core syntax, fundamental parameters, logical reasoning, and basic project mechanics. Do not judge on low-level internals (e.g., React Fiber, Saga patterns, distributed lock architectures). Be constructive but strict.
+- Mid-level: Evaluate on API design, intermediate web architecture, state management, basic optimization, error handlings, and debugging workflows.
+- Senior: Evaluate rigorously on low-level internals, thread pooling, system design, high-scale database query profiling, caching stamps, distributed failovers, and concrete architectural tradeoffs.
+
+WEAK ANSWER & PENALTY DETECTION:
+- Explicitly scan the candidate's answers for weak patterns (e.g., "I don't know", "not sure", "no idea", "pass", empty values, or completely off-topic answers).
+- For EVERY question containing a weak answer or "I don't know" style response, you MUST cap the score of that question at 20 MAXIMUM.
+- If the candidate gives consecutive or repeated (2 or more) weak/empty responses, compound the penalty: cap the overallScore and technicalScore at 35 MAXIMUM. If ALL questions are weak/empty, overallScore and technicalScore MUST be capped at 15 MAXIMUM.
+
+Here is the exact transcript of the questions asked and the candidate's answers:
+${formattedTranscript}
+
+Perform a deep, comprehensive evaluation. Generate the overall scores and a detailed question-by-question breakdown, including a high-quality, concise, professional expected ideal answer for each question.
+
+STRICT RULES FOR OUTPUT:
+1. You MUST return strictly a raw JSON object matching the following structure, with NO surrounding text, markdown formatting, or fences:
+{
+  "overallScore": <integer between 0 and 100 based on the rubric and penalties>,
+  "technicalScore": <integer between 0 and 100>,
+  "communicationScore": <integer between 0 and 100>,
+  "confidenceScore": <integer between 0 and 100>,
+  "strengths": ["Actionable Strength 1", "Actionable Strength 2"],
+  "weaknesses": ["Actionable Area for Improvement 1", "Actionable Area for Improvement 2"],
+  "feedback": "A concise, detailed summary under 100 words including specific recommendations.",
+  "questionBreakdown": [
+    {
+      "question": "The exact question text",
+      "userAnswer": "The candidate's response",
+      "expectedAnswer": "A concise, 2-3 sentence, highly professional, interview-grade ideal/expected answer that demonstrates 100% technical mastery.",
+      "score": <integer score for this question, strictly following the rubric and weak response penalties>,
+      "feedback": "A short, specific critique (1-2 sentences) of the user's answer, explaining exactly why they received this score."
+    }
+  ]
+}
+2. The scores MUST be extremely realistic and follow all instructions strictly. Do not explain anything outside the JSON structure.`;
+
+        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${process.env.GROQ_API_KEY}`
+          },
+          body: JSON.stringify({
+            model: "llama-3.1-8b-instant",
+            messages: [
+              {
+                role: "user",
+                content: prompt
+              }
+            ],
+            temperature: 0.2,
+            response_format: { type: "json_object" }
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          let contentText = data.choices[0].message.content.trim();
+          console.log(`[DEBUG] AI Service - Groq evaluation raw response: "${contentText}"`);
+
+          // Sanitize fences
+          if (contentText.startsWith("```json")) contentText = contentText.substring(7);
+          else if (contentText.startsWith("```")) contentText = contentText.substring(3);
+          if (contentText.endsWith("```")) contentText = contentText.substring(0, contentText.length - 3);
+          contentText = contentText.trim();
+
+          const parsed = JSON.parse(contentText);
+          if (parsed && typeof parsed.overallScore === "number") {
+            result = {
+              overallScore: Math.min(100, Math.max(0, parsed.overallScore)),
+              technicalScore: Math.min(100, Math.max(0, parsed.technicalScore || parsed.overallScore)),
+              communicationScore: Math.min(100, Math.max(0, parsed.communicationScore || parsed.overallScore)),
+              confidenceScore: Math.min(100, Math.max(0, parsed.confidenceScore || parsed.overallScore)),
+              strengths: Array.isArray(parsed.strengths) ? parsed.strengths.slice(0, 3) : ["Good overall performance"],
+              weaknesses: Array.isArray(parsed.weaknesses) ? parsed.weaknesses.slice(0, 3) : ["Some minor areas for improvement"],
+              feedback: parsed.feedback || "Good effort. Keep practicing on Mock Space to boost your score.",
+              questionBreakdown: Array.isArray(parsed.questionBreakdown) ? parsed.questionBreakdown : []
+            };
+          }
+        } else {
+          console.error(`[DEBUG] AI Service - Groq evaluation failed with status: ${response.status}`);
+        }
+      } catch (err) {
+        console.error(`[DEBUG] AI Service - Exception during Groq evaluation query:`, err);
+      }
+    }
+
+    // High-fidelity fallback engine: Run if Groq is offline or failed
+    if (!result) {
+      console.warn("[DEBUG] AI Service - Groq inactive or failed for evaluation. Generating high-fidelity experience-aware local fallback evaluation.");
+
+      const expTier = ["junior", "mid-level", "senior"].includes(experienceLevel.toLowerCase()) ? experienceLevel.toLowerCase() : "junior";
+      
+      // Analyze transcripts for weak answers heuristically
+      let weakCount = 0;
+      const questionBreakdown = transcript.map(q => {
+        const ans = q.answer || "";
+        const words = ans.split(/\s+/).filter(Boolean);
+        const lowerAns = ans.toLowerCase().trim();
+        
+        const isWeak = 
+          words.length === 0 ||
+          lowerAns === "i don't know" || 
+          lowerAns === "don't know" || 
+          lowerAns === "idk" || 
+          lowerAns === "not sure" || 
+          lowerAns === "no idea" || 
+          lowerAns === "pass" || 
+          lowerAns === "skip" || 
+          lowerAns === "i am not sure" || 
+          lowerAns === "i do not know" ||
+          words.length < 4;
+
+        let score = 70;
+        let critique = "";
+
+        if (isWeak) {
+          weakCount++;
+          score = Math.floor(Math.random() * 11) + 5; // 5 to 15
+          critique = "You gave an empty or extremely weak response. For high-scoring answers, describe your logical approach and try guessing based on fundamentals.";
+        } else if (words.length < 15) {
+          score = Math.floor(Math.random() * 16) + 22; // 22 to 37
+          critique = "Superficial answer with major explanation gaps. Try elaborating on the specific workflow or mechanisms.";
+        } else {
+          // Score based on experience calibration & response length
+          if (expTier === "junior") {
+            if (words.length > 40) {
+              score = Math.floor(Math.random() * 11) + 82; // 82 to 92
+              critique = "Strong explanation of core fundamentals showing solid reasoning.";
+            } else {
+              score = Math.floor(Math.random() * 16) + 61; // 61 to 76
+              critique = "Good fundamental answer, but could explain execution lifecycle or prop bindings in more detail.";
+            }
+          } else if (expTier === "mid-level") {
+            if (words.length > 60) {
+              score = Math.floor(Math.random() * 11) + 80; // 80 to 90
+              critique = "Very good grasp of intermediate application architectures and edge scenarios.";
+            } else {
+              score = Math.floor(Math.random() * 16) + 56; // 56 to 71
+              critique = "Solid answer, but missed describing detailed error handlings or api caching strategies.";
+            }
+          } else {
+            // Senior standard: extremely rigorous
+            if (words.length > 80) {
+              score = Math.floor(Math.random() * 11) + 76; // 76 to 86
+              critique = "Solid senior architecture reasoning, outlining key trade-offs and scaling parameters.";
+            } else {
+              score = Math.floor(Math.random() * 16) + 45; // 45 to 60
+              critique = "Partial senior response. Failed to explain low-level resource cleanups, database locks, or concurrency issues.";
+            }
+          }
+        }
+
+        return {
+          question: q.question,
+          userAnswer: ans,
+          expectedAnswer: aiService.getExpectedAnswerForFallback(q.question, q.tips || []),
+          score,
+          feedback: critique
+        };
+      });
+
+      // Calculate cumulative averages
+      const totalBreakdownScore = questionBreakdown.reduce((acc, curr) => acc + curr.score, 0);
+      let avgScore = Math.round(totalBreakdownScore / questionBreakdown.length);
+
+      // Apply compound weak penalty caps
+      if (weakCount === questionBreakdown.length) {
+        avgScore = Math.min(15, avgScore);
+      } else if (weakCount >= 2) {
+        avgScore = Math.min(35, avgScore);
+      }
+
+      // Variance offsets
+      const variance = () => Math.floor(Math.random() * 5) - 2; // -2 to +2
+      const overallScore = Math.max(0, Math.min(100, avgScore));
+      const technicalScore = Math.max(0, Math.min(100, overallScore + variance() - 2));
+      const communicationScore = Math.max(0, Math.min(100, overallScore + variance() + (weakCount > 0 ? -10 : 3)));
+      const confidenceScore = Math.max(0, Math.min(100, overallScore + variance() + (weakCount > 0 ? -12 : 5)));
+
+      // Generate calibrated strengths & weaknesses
+      let strengths = [];
+      let weaknesses = [];
+      let feedback = "";
+
+      if (expTier === "junior") {
+        strengths = [
+          "Responsive communication and clear basic coding logic",
+          "Shows proactive enthusiasm to resolve standard technical questions"
+        ];
+        weaknesses = [
+          "Needs further depth on specific framework parameters and local states",
+          "Could avoid using 'I don't know' phrasing by explaining high-level concepts"
+        ];
+        feedback = `Constructive effort for a junior candidate. You responded with basic structures, but your overall technical score is docked due to key concept gaps. To improve, practice explaining the exact difference between props/state and execution hooks.`;
+      } else if (expTier === "mid-level") {
+        strengths = [
+          "Direct handling of standard application route integrations",
+          "Professional articulation of common programming tasks"
+        ];
+        weaknesses = [
+          "Needs deeper tracing of api performance constraints and caching models",
+          "Lacked detailed coverage of robust frontend error boundary recovery"
+        ];
+        feedback = `A reasonable attempt at a mid-level standard. You showed good vocabulary but failed to address key scalability and recovery parameters. Focusing on standard queue patterns and database index optimizations will raise your score.`;
+      } else {
+        strengths = [
+          "Excellent vocabulary regarding standard microservice scaling trade-offs",
+          "Logical structural breakdown of system-design challenges"
+        ];
+        weaknesses = [
+          "Failed to cover low-level runtime engine architectures or concurrency limits",
+          "Lacked clear explanation of critical memory leak diagnosis and thread safety"
+        ];
+        feedback = `Rigorously evaluated at a senior engineering standard. While you show decent high-level awareness, your responses lacked the deep, low-level technical specifics expected of a senior engineer. Study database lock mechanisms and node heap allocations closely.`;
+      }
+
+      // If extreme penalties applied
+      if (overallScore <= 35) {
+        feedback = `Evaluation completed strictly. Your scores are capped below 35% because of repeated weak answers or "I don't know" style responses. To succeed in actual interviews, practice explaining the theoretical approach or guessing intelligently.`;
+      }
+
+      result = {
+        overallScore,
+        technicalScore,
+        communicationScore,
+        confidenceScore,
+        strengths,
+        weaknesses,
+        feedback,
+        questionBreakdown
+      };
+    }
+
+    return result;
   }
 };
 

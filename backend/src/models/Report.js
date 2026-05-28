@@ -42,6 +42,31 @@ const reportSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+
+    questionBreakdown: [
+      {
+        question: {
+          type: String,
+          required: true,
+        },
+        userAnswer: {
+          type: String,
+          default: "",
+        },
+        expectedAnswer: {
+          type: String,
+          default: "",
+        },
+        score: {
+          type: Number,
+          default: 0,
+        },
+        feedback: {
+          type: String,
+          default: "",
+        },
+      },
+    ],
   },
   {
     timestamps: true,

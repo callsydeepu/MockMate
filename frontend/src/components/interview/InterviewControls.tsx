@@ -18,6 +18,7 @@ interface InterviewControlsProps {
   isFirstQuestion: boolean;
   isLastQuestion: boolean;
   isGeneratingNext: boolean;
+  isAnswerSubmitted: boolean;
   onToggleCamera: () => void;
   onToggleMic: () => void;
   onPause: () => void;
@@ -33,6 +34,7 @@ export const InterviewControls: React.FC<InterviewControlsProps> = ({
   isPaused,
   isLastQuestion,
   isGeneratingNext,
+  isAnswerSubmitted,
   onToggleCamera,
   onToggleMic,
   onPause,
@@ -99,9 +101,10 @@ export const InterviewControls: React.FC<InterviewControlsProps> = ({
             size="sm"
             onClick={onGenerateNext}
             loading={isGeneratingNext}
-            disabled={isGeneratingNext}
+            disabled={isGeneratingNext || !isAnswerSubmitted}
             icon={<SkipForward className="w-4 h-4 text-cyan-300 animate-pulse" />}
             className="rounded-xl px-4 py-2 bg-gradient-to-r from-violet-600 to-cyan-500 border-none text-white hover:opacity-90 shadow-md shadow-violet-500/10"
+            title={!isAnswerSubmitted ? "Please submit your answer first" : "Generate the next customized question"}
           >
             Generate Next Question
           </Button>
@@ -110,9 +113,10 @@ export const InterviewControls: React.FC<InterviewControlsProps> = ({
             variant="primary"
             size="sm"
             onClick={onNext}
-            disabled={isGeneratingNext}
+            disabled={isGeneratingNext || !isAnswerSubmitted}
             icon={<SkipForward className="w-4 h-4" />}
             className="rounded-xl px-4 py-2"
+            title={!isAnswerSubmitted ? "Please submit your answer first" : "Move to the next question"}
           >
             Next Question
           </Button>

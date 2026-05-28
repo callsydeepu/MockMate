@@ -1,6 +1,8 @@
 const Report = require("../models/Report");
 const Interview = require("../models/Interview");
 const PDFDocument = require("pdfkit");
+const aiService = require("../services/aiService");
+const User = require("../models/User");
 
 const generateReport = async (req, res) => {
   try {
@@ -14,34 +16,62 @@ const generateReport = async (req, res) => {
       });
     }
 
-    // temporary dummy scores
+    // Defensive check: check if report has already been generated
+    const existingReport = await Report.findOne({ interview: interviewId });
+    if (existingReport) {
+      console.log(`[DEBUG] backend report controller - Existing report found for interview: ${interviewId}, returning cached report.`);
+      return res.status(200).json({
+        message: "Report already generated",
+        report: existingReport,
+      });
+    }
+
+    console.log(`[DEBUG] backend report controller - Triggering AI evaluation service...`);
+
+    // Call dynamic experience-aware Progressive AI evaluation engine
+    const evaluation = await aiService.evaluateInterview({
+      role: interview.role,
+      company: interview.company,
+      difficulty: interview.difficulty,
+      experienceLevel: interview.experienceLevel,
+      questions: interview.questions,
+    });
+
+    // Create Report in MongoDB
     const report = await Report.create({
       user: interview.user,
       interview: interview._id,
-
-      overallScore: 78,
-      communicationScore: 80,
-      technicalScore: 75,
-      confidenceScore: 77,
-
-      strengths: [
-        "Good communication",
-        "Confident answers",
-      ],
-
-      weaknesses: [
-        "Need deeper technical explanations",
-      ],
-
-      feedback:
-        "Overall performance was good. Improve technical depth.",
+      overallScore: evaluation.overallScore,
+      communicationScore: evaluation.communicationScore,
+      technicalScore: evaluation.technicalScore,
+      confidenceScore: evaluation.confidenceScore,
+      strengths: evaluation.strengths,
+      weaknesses: evaluation.weaknesses,
+      feedback: evaluation.feedback,
+      questionBreakdown: evaluation.questionBreakdown || [],
     });
+
+    console.log(`[DEBUG] backend report controller - Report created successfully in MongoDB under ID: ${report._id}`);
+
+    // Update User cumulative dashboard analytics metrics
+    const user = await User.findById(interview.user);
+    if (user) {
+      const userReports = await Report.find({ user: user._id });
+      const totalReports = userReports.length;
+      const totalScore = userReports.reduce((acc, curr) => acc + curr.overallScore, 0);
+      
+      user.interviewsTaken = totalReports;
+      user.averageScore = Math.round(totalScore / totalReports);
+      await user.save();
+      console.log(`[DEBUG] backend report controller - Cumulative analytics updated for user: ${user._id} (Interviews: ${user.interviewsTaken}, Avg Score: ${user.averageScore})`);
+    }
 
     res.status(201).json({
       message: "Report generated",
       report,
     });
   } catch (error) {
+    console.error(`[DEBUG] backend report controller - Exception:`, error);
     res.status(500).json({
       message: error.message,
     });
@@ -165,11 +195,31 @@ const downloadReportPDF = async (req, res) => {
     doc.moveDown(1.5);
 
     // Question Breakdown
-    if (report.interview && report.interview.questions && report.interview.questions.length > 0) {
+    if (report.questionBreakdown && report.questionBreakdown.length > 0) {
+      doc.fillColor("#0f172a").fontSize(14).text("Question & Answer Breakdown", { underline: true }).moveDown(0.5);
+      
+      report.questionBreakdown.forEach((q, idx) => {
+        // Keep question titles together with question block
+        if (doc.y > 600) {
+          doc.addPage();
+        }
+        
+        doc.fontSize(11).fillColor("#0f172a").text(`Question ${idx + 1}: ${q.question}`, { bold: true }).moveDown(0.3);
+        doc.fontSize(10).fillColor("#475569").text(`Your Response: "${q.userAnswer || "[No response provided]"}"`, { italic: true }).moveDown(0.3);
+        
+        doc.fontSize(10).fillColor("#4f46e5").text(`Score: ${q.score}%`, { bold: true }).moveDown(0.3);
+        doc.fontSize(9.5).fillColor("#1e293b").text(`AI Critique: ${q.feedback}`).moveDown(0.3);
+        
+        if (q.expectedAnswer) {
+          doc.fontSize(9.5).fillColor("#047857").text(`Expected / Ideal Answer: "${q.expectedAnswer}"`, { bold: true }).moveDown(0.8);
+        } else {
+          doc.moveDown(0.8);
+        }
+      });
+    } else if (report.interview && report.interview.questions && report.interview.questions.length > 0) {
       doc.fillColor("#0f172a").fontSize(14).text("Question & Answer Breakdown", { underline: true }).moveDown(0.5);
       
       report.interview.questions.forEach((q, idx) => {
-        // Keep question titles together with question block
         if (doc.y > 650) {
           doc.addPage();
         }

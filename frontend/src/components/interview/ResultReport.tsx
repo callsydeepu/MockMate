@@ -48,11 +48,17 @@ export const ResultReport: React.FC<ResultReportProps> = ({ report }) => {
       <h3 className="text-lg font-medium mb-2">Question Summary</h3>
       <div className="space-y-4 max-h-60 overflow-y-auto mb-6">
         {report.transcriptSummary.map((item, idx) => (
-          <div key={idx} className="border-b border-gray-700 pb-2">
-            <p className="font-medium">Q: {item.question}</p>
-            <p className="italic text-sm opacity-80">Your Answer: {item.answer}</p>
-            <p className="text-sm">Feedback: {item.feedback}</p>
-            <p className="text-sm font-semibold text-violet-200">Score: {item.score}%</p>
+          <div key={idx} className="border-b border-gray-700 pb-2 space-y-1">
+            <p className="font-medium text-white">Q: {item.question}</p>
+            <p className="italic text-sm text-slate-300 pl-2">Your Answer: {item.answer}</p>
+            <p className="text-sm text-slate-300 pl-2">Feedback: {item.feedback}</p>
+            {item.expectedAnswer && (
+              <p className="text-sm text-emerald-400 pl-2 font-medium">
+                <span className="text-[10px] text-emerald-500 font-mono font-bold block uppercase tracking-wider">Expected Answer:</span>
+                "{item.expectedAnswer}"
+              </p>
+            )}
+            <p className="text-sm font-semibold text-violet-300 pl-2">Score: {item.score}%</p>
           </div>
         ))}
       </div>

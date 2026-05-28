@@ -273,6 +273,19 @@ const Reports: React.FC = () => {
                   </p>
                 </div>
               </div>
+
+              {/* Ideal / expected answer */}
+              {item.expectedAnswer && (
+                <div className="p-4 rounded-xl border border-emerald-500/10 bg-emerald-600/5 text-xs text-slate-300 relative overflow-hidden transition-all duration-300 hover:border-emerald-500/20">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 blur-xl rounded-full" />
+                  <span className="text-[9px] text-emerald-400 block font-mono font-bold uppercase mb-1 tracking-wider">
+                    Expected / Ideal Response
+                  </span>
+                  <p className="text-slate-300 leading-relaxed font-medium">
+                    "{item.expectedAnswer}"
+                  </p>
+                </div>
+              )}
             </div>
           )) : (
             <div className="p-5 rounded-2xl border border-white/5 bg-slate-950/40 space-y-2">
