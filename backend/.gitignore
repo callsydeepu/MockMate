@@ -41,6 +41,6 @@ Thumbs.db
 .cache/
 
 # Optional AI model files
-models/
+/models/
 weights/
 checkpoints/

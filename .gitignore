@@ -94,7 +94,7 @@ temp/
 # =========================
 # Optional AI/Model Files
 # =========================
-models/
+/models/
 weights/
 checkpoints/
 
