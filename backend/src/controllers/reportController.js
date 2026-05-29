@@ -16,6 +16,13 @@ const generateReport = async (req, res) => {
       });
     }
 
+    // Ownership check to prevent IDOR
+    if (interview.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        message: "Forbidden: Access denied",
+      });
+    }
+
     // Defensive check: check if report has already been generated
     const existingReport = await Report.findOne({ interview: interviewId });
     if (existingReport) {
@@ -107,6 +114,13 @@ const downloadReportPDF = async (req, res) => {
       console.error(`[DEBUG] backend PDF generation - Report not found for ID: ${reportId}`);
       return res.status(404).json({
         message: "Report not found",
+      });
+    }
+
+    // Ownership check to prevent IDOR
+    if (report.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        message: "Forbidden: Access denied",
       });
     }
 

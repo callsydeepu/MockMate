@@ -73,4 +73,7 @@ const reportSchema = new mongoose.Schema(
   }
 );
 
+reportSchema.index({ user: 1 });
+reportSchema.index({ interview: 1 }, { unique: true });
+
 module.exports = mongoose.model("Report", reportSchema);

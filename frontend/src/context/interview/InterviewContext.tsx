@@ -64,6 +64,8 @@ interface InterviewContextType {
   submitCurrentAnswer: (answer: string) => Promise<boolean>;
   endInterview: () => Promise<InterviewReport>;
   clearSession: () => void;
+  refreshAnalytics: () => void;
+  refreshTrigger: number;
 }
 
 const InterviewContext = createContext<InterviewContextType | undefined>(undefined);
@@ -283,6 +285,8 @@ export const InterviewProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   });
   const [isSubmittingSession, setIsSubmittingSession] = useState<boolean>(false);
   const [isGeneratingNext, setIsGeneratingNext] = useState<boolean>(false);
+  const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
+  const refreshAnalytics = () => setRefreshTrigger((prev) => prev + 1);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -439,6 +443,7 @@ export const InterviewProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         });
 
         console.log('[DEBUG] refresh synchronization - active session synced to backend ID:', interviewId);
+        refreshAnalytics();
       } catch (err) {
         console.error('[DEBUG] Error syncing interview to backend:', err);
         toast('Backend sync unavailable. Running interview in local mode.', { icon: '⚠️' });
@@ -711,6 +716,8 @@ export const InterviewProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       }
     } catch {
       setReports((prev) => [finalReport, ...prev]);
+    } finally {
+      refreshAnalytics();
     }
 
     setActiveSession(null);
@@ -742,6 +749,8 @@ export const InterviewProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         submitCurrentAnswer,
         endInterview,
         clearSession,
+        refreshAnalytics,
+        refreshTrigger,
       }}
     >
       {children}

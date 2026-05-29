@@ -43,6 +43,13 @@ const addQuestion = async (req, res) => {
       });
     }
 
+    // Ownership check to prevent IDOR
+    if (interview.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        message: "Forbidden: Access denied",
+      });
+    }
+
     interview.questions.push({
       question,
       category: "technical",
@@ -74,6 +81,20 @@ const submitAnswer = async (req, res) => {
       });
     }
 
+    // Ownership check to prevent IDOR
+    if (interview.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        message: "Forbidden: Access denied",
+      });
+    }
+
+    // Boundary check on questionIndex to prevent process crash
+    if (questionIndex === undefined || questionIndex === null || questionIndex < 0 || questionIndex >= interview.questions.length) {
+      return res.status(400).json({
+        message: "Invalid question index mapping",
+      });
+    }
+
     interview.questions[questionIndex].answer = answer;
 
     await interview.save();
@@ -102,6 +123,13 @@ const endInterview = async (req, res) => {
       });
     }
 
+    // Ownership check to prevent IDOR
+    if (interview.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        message: "Forbidden: Access denied",
+      });
+    }
+
     interview.status = "completed";
 
     await interview.save();
@@ -127,6 +155,13 @@ const getInterview = async (req, res) => {
       });
     }
 
+    // Ownership check to prevent IDOR
+    if (interview.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        message: "Forbidden: Access denied",
+      });
+    }
+
     res.status(200).json(interview);
   } catch (error) {
     res.status(500).json({
@@ -144,6 +179,13 @@ const generateQuestion = async (req, res) => {
     if (!interview) {
       return res.status(404).json({
         message: "Interview not found",
+      });
+    }
+
+    // Ownership check to prevent IDOR
+    if (interview.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        message: "Forbidden: Access denied",
       });
     }
 

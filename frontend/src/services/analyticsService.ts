@@ -2,6 +2,7 @@ import apiClient from './apiClient';
 
 interface AnalyticsResponse {
   totalInterviews: number;
+  totalReports: number;
   averageScore: string;
   averageCommunication: string;
   averageTechnical: string;
@@ -20,8 +21,11 @@ export const analyticsService = {
 
     return {
       interviewsCompleted: response.data.totalInterviews,
+      reportsGenerated: response.data.totalReports,
       averageScore: Number(response.data.averageScore),
       readinessRatio: Number(response.data.averageConfidence),
+      averageCommunication: Number(response.data.averageCommunication),
+      averageTechnical: Number(response.data.averageTechnical),
       fillerWordsAverage: 0,
     };
   },

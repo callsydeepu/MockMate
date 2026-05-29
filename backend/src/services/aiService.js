@@ -249,6 +249,9 @@ STRICT OUTPUT RULES:
   "suggestedDuration": ${activeCategory === "debugging" ? 180 : 120}
 }`;
 
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 12000);
+
         const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
           method: "POST",
           headers: {
@@ -265,8 +268,11 @@ STRICT OUTPUT RULES:
             ],
             temperature: 0.7,
             response_format: { type: "json_object" }
-          })
+          }),
+          signal: controller.signal,
         });
+
+        clearTimeout(timeoutId);
 
         if (response.ok) {
           const data = await response.json();
@@ -483,6 +489,9 @@ STRICT RULES FOR OUTPUT:
 }
 2. The scores MUST be extremely realistic and follow all instructions strictly. Do not explain anything outside the JSON structure.`;
 
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 12000);
+
         const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
           method: "POST",
           headers: {
@@ -499,8 +508,11 @@ STRICT RULES FOR OUTPUT:
             ],
             temperature: 0.2,
             response_format: { type: "json_object" }
-          })
+          }),
+          signal: controller.signal,
         });
+
+        clearTimeout(timeoutId);
 
         if (response.ok) {
           const data = await response.json();
