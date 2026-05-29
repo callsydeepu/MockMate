@@ -361,18 +361,15 @@ const LandingPage: React.FC = () => {
               </Button>
             </div>
             <div className="w-full md:w-1/2 rounded-2xl border-2 border-slate-200/60 overflow-hidden shadow-sm bg-white">
-              <div className="relative aspect-video bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col items-center justify-center rounded-xl">
-                <motion.div 
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="w-16 h-16 rounded-full bg-gradient-to-br from-violet-100 to-sky-100 border-2 border-violet-300/40 flex items-center justify-center shadow-sm"
-                >
-                  <Video className="w-7 h-7 text-violet-600" />
-                </motion.div>
-                <span className="text-[11px] text-slate-500 font-mono mt-4 uppercase tracking-wider font-bold">
-                  Webcam Detection Ready
-                </span>
-              </div>
+              <video
+                controls
+                preload="metadata"
+                poster="/demo-thumbnail.png"
+                className="w-full aspect-video rounded-2xl object-cover"
+              >
+                <source src="/demo.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
             </div>
           </div>
         </Card>

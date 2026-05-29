@@ -104,6 +104,7 @@ const getUserReports = async (req, res) => {
 const downloadReportPDF = async (req, res) => {
   try {
     const reportId = req.params.id;
+    console.log("PDF request:", req.params.id);
     console.log(`[DEBUG] backend PDF generation - Fetching report ID: ${reportId}`);
 
     const report = await Report.findById(reportId)
@@ -118,7 +119,7 @@ const downloadReportPDF = async (req, res) => {
     }
 
     // Ownership check to prevent IDOR
-    if (report.user.toString() !== req.user._id.toString()) {
+    if (report.user._id.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         message: "Forbidden: Access denied",
       });
@@ -133,7 +134,7 @@ const downloadReportPDF = async (req, res) => {
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename=mockmate-report-${reportId}.pdf`
+      `attachment; filename=report-${report._id}.pdf`
     );
 
     // Pipe the PDF directly to the express response object

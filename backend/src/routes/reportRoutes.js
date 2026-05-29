@@ -14,6 +14,6 @@ router.post("/generate", protect, generateReport);
 
 router.get("/", protect, getUserReports);
 
-router.get("/:id/download", protect, downloadReportPDF);
+router.get("/:id/pdf", protect, downloadReportPDF);
 
 module.exports = router;

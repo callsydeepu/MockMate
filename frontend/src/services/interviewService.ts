@@ -124,9 +124,10 @@ export const interviewService = {
   },
 
   downloadReportPDF: async (reportId: string): Promise<boolean> => {
+    console.log("Downloading report:", reportId);
     console.log(`[DEBUG] API request - Downloading PDF for report ID: ${reportId}`);
     try {
-      const response = await apiClient.get(`/reports/${reportId}/download`, {
+      const response = await apiClient.get(`/reports/${reportId}/pdf`, {
         responseType: 'blob',
       });
 
@@ -137,7 +138,7 @@ export const interviewService = {
       const downloadUrl = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = downloadUrl;
-      link.setAttribute('download', `mockmate-report-${reportId}.pdf`);
+      link.setAttribute('download', `report-${reportId}.pdf`);
       
       document.body.appendChild(link);
       link.click();
