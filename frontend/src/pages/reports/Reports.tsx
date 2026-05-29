@@ -121,14 +121,14 @@ const Reports: React.FC = () => {
             <span className="text-xs font-bold text-sky-600 uppercase font-mono tracking-wider">Mock Result</span>
             <span className="text-[10px] text-slate-400 font-bold">•</span>
             <span className="text-slate-500 text-xs font-semibold flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5 text-slate-400" /> {activeReport.dateLabel}
+              <Calendar className="w-3.5 h-3.5 text-slate-500" /> {activeReport.dateLabel}
             </span>
           </div>
           <h1 className="text-lg md:text-xl font-display font-extrabold text-slate-900">
             {activeReport.companyName} Sim: {activeReport.role}
           </h1>
-          <p className="text-slate-400 text-[10px] font-mono">REPORT IDENTIFIER: {activeReport.id}</p>
-          <p className="text-slate-400 text-[10px] font-mono">LAST UPDATED: {new Date(activeReport.updatedAt).toLocaleString('en-US')}</p>
+          <p className="text-slate-500 text-[10px] font-mono">REPORT IDENTIFIER: {activeReport.id}</p>
+          <p className="text-slate-500 text-[10px] font-mono">LAST UPDATED: {new Date(activeReport.updatedAt).toLocaleString('en-US')}</p>
           <div className="flex flex-wrap gap-2 mt-3">
             <span className="badge-violet">
               {activeReport.performanceLevel}
@@ -195,7 +195,7 @@ const Reports: React.FC = () => {
       <Card className="border-slate-200/50 space-y-4 shadow-sm">
         <div>
           <h3 className="text-xs uppercase font-black text-slate-500 tracking-wider">Strengths, Weaknesses & AI Feedback</h3>
-          <p className="text-[10px] text-slate-400 font-semibold">Personalized summary generated from your completed interview</p>
+          <p className="text-[10px] text-slate-500 font-semibold">Personalized summary generated from your completed interview</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-semibold text-slate-700">
@@ -237,7 +237,7 @@ const Reports: React.FC = () => {
       <Card className="border-slate-200/50 space-y-4 shadow-sm">
         <div>
           <h3 className="text-xs uppercase font-black text-slate-500 tracking-wider">Question & Transcript Breakdown</h3>
-          <p className="text-[10px] text-slate-400 font-semibold">Examine specific question responses alongside structural coach analysis</p>
+          <p className="text-[10px] text-slate-500 font-semibold">Examine specific question responses alongside structural coach analysis</p>
         </div>
 
         <div className="space-y-4">
@@ -249,7 +249,7 @@ const Reports: React.FC = () => {
               {/* Question card header */}
               <div className="flex justify-between items-start gap-4 pb-3 border-b border-slate-100">
                 <div className="space-y-1">
-                  <span className="text-[9px] text-slate-400 font-mono font-bold block uppercase">Question 0{idx + 1}</span>
+                  <span className="text-[9px] text-slate-500 font-mono font-bold block uppercase">Question 0{idx + 1}</span>
                   <h4 className="text-xs font-bold text-slate-900">{item.question}</h4>
                 </div>
                 <ScoreBadge score={item.score} size="sm" />

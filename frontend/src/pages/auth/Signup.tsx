@@ -107,13 +107,13 @@ const Signup: React.FC = () => {
               className="mt-0.5 w-4 h-4 rounded border-slate-350 text-violet-600 focus:ring-violet-500/20 bg-white"
               {...register('agreeTerms')}
             />
-            <label htmlFor="agreeTerms" className="ml-2 text-xs text-slate-600 font-medium select-none cursor-pointer">
+            <label htmlFor="agreeTerms" className="ml-2 text-xs text-slate-600 font-semibold select-none cursor-pointer">
               I agree to the MockMate{' '}
-              <a href="#" className="text-sky-600 hover:underline font-semibold">
+              <a href="#" className="text-violet-600 hover:text-violet-850 hover:underline font-bold">
                 Terms of Use
               </a>{' '}
               and{' '}
-              <a href="#" className="text-sky-600 hover:underline font-semibold">
+              <a href="#" className="text-violet-600 hover:text-violet-850 hover:underline font-bold">
                 Privacy Policy
               </a>
             </label>
@@ -139,9 +139,9 @@ const Signup: React.FC = () => {
 
       <SocialLoginButtons />
 
-      <div className="mt-6 text-center text-xs text-slate-500 font-medium">
+      <div className="mt-6 text-center text-xs text-slate-600 font-semibold">
         Already have an account?{' '}
-        <Link to="/login" className="text-sky-600 hover:underline font-semibold">
+        <Link to="/login" className="text-violet-600 hover:text-violet-850 hover:underline font-bold">
           Sign In
         </Link>
       </div>

@@ -71,7 +71,7 @@ const Login: React.FC = () => {
         <div className="space-y-1">
           <div className="flex justify-between items-center">
             <span className="opacity-0 text-xs">spacer</span>
-            <Link to="/forgot-password" className="text-[10px] text-cyan-400 hover:underline font-semibold">
+            <Link to="/forgot-password" className="text-[10px] text-violet-600 hover:text-violet-800 hover:underline font-semibold">
               Forgot password?
             </Link>
           </div>
@@ -111,9 +111,9 @@ const Login: React.FC = () => {
 
       <SocialLoginButtons />
 
-      <div className="mt-6 text-center text-xs text-slate-400">
+      <div className="mt-6 text-center text-xs text-slate-500 font-semibold">
         New to MockMate?{' '}
-        <Link to="/signup" className="text-cyan-400 hover:underline font-semibold">
+        <Link to="/signup" className="text-violet-600 hover:text-violet-800 hover:underline font-bold">
           Create account
         </Link>
       </div>

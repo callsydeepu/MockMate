@@ -48,82 +48,82 @@ const Profile: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl md:text-2xl font-display font-extrabold text-white">Your Prep Profile</h1>
-        <p className="text-slate-400 text-xs font-medium">Update candidate credentials and track preparation achievement awards</p>
+        <h1 className="text-xl md:text-2xl font-display font-extrabold text-slate-900">Your Prep Profile</h1>
+        <p className="text-slate-500 text-xs font-semibold">Update candidate credentials and track preparation achievement awards</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         {/* Left: Avatar identity block (1 column) */}
-        <Card className="lg:col-span-1 border-white/5 text-center flex flex-col items-center gap-4 relative overflow-hidden py-8">
+        <Card className="lg:col-span-1 border-slate-200/50 text-center flex flex-col items-center gap-4 relative overflow-hidden py-8 shadow-sm">
           <div className="absolute top-[-10%] left-[-10%] w-24 h-24 bg-violet-600/10 blur-2xl rounded-full" />
           
           <div className="relative">
             <img
               src={user?.avatarUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'}
               alt={user?.name}
-              className="w-24 h-24 rounded-2xl object-cover bg-slate-800 border-2 border-violet-500/30 shadow-lg"
+              className="w-24 h-24 rounded-2xl object-cover bg-slate-100 border-2 border-violet-500/30 shadow-lg"
             />
-            <span className="absolute bottom-1 right-1 w-4.5 h-4.5 rounded-full bg-emerald-500 border-2 border-slate-950 flex items-center justify-center" title="Prep Mode Online" />
+            <span className="absolute bottom-1 right-1 w-4.5 h-4.5 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center animate-pulse" title="Prep Mode Online" />
           </div>
 
           <div className="space-y-1">
-            <h2 className="text-base font-bold text-white leading-tight">{user?.name}</h2>
-            <p className="text-[10px] text-slate-400 font-semibold">{user?.email}</p>
+            <h2 className="text-base font-bold text-slate-900 leading-tight">{user?.name}</h2>
+            <p className="text-[10px] text-slate-600 font-bold">{user?.email}</p>
           </div>
 
-          <div className="p-3.5 rounded-xl border border-white/5 bg-slate-900/40 w-full text-left text-xs space-y-2">
-            <div className="flex justify-between text-slate-400 font-medium">
+          <div className="p-3.5 rounded-xl border border-slate-200/50 bg-slate-50/70 w-full text-left text-xs space-y-2">
+            <div className="flex justify-between text-slate-600 font-semibold">
               <span>Member Joined:</span>
-              <span className="text-white font-bold">{user?.joinedDate || 'Jan 2026'}</span>
+              <span className="text-slate-900 font-bold">{user?.joinedDate || 'Jan 2026'}</span>
             </div>
-            <div className="flex justify-between text-slate-400 font-medium">
+            <div className="flex justify-between text-slate-600 font-semibold">
               <span>Status:</span>
-              <span className="text-cyan-400 font-bold">Active Prep Cadet</span>
+              <span className="text-sky-600 font-extrabold">Active Prep Cadet</span>
             </div>
           </div>
         </Card>
 
         {/* Right: editable profile form (2 columns) */}
         <div className="lg:col-span-2 space-y-6">
-          <Card className="border-white/5 space-y-4">
-            <h3 className="text-xs uppercase font-black text-slate-400 tracking-wider">Update Details</h3>
+          <Card className="border-slate-200/50 space-y-4 shadow-sm">
+            <h3 className="text-xs uppercase font-black text-slate-700 tracking-wider">Update Details</h3>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                    <UserIcon className="w-4 h-4 text-violet-400" /> Full Name
+                  <label className="text-xs font-semibold text-slate-750 flex items-center gap-1.5">
+                    <UserIcon className="w-4 h-4 text-violet-500" /> Full Name
                   </label>
                   <input
                     type="text"
-                    className={`px-4 py-2.5 text-sm glass-input text-white ${errors.name ? 'border-red-500/50' : ''}`}
+                    className={`px-4 py-2.5 text-sm glass-input text-slate-900 ${errors.name ? 'border-red-500/50' : ''}`}
                     {...register('name')}
                   />
-                  {errors.name && <span className="text-[10px] text-red-400 font-medium">{errors.name.message}</span>}
+                  {errors.name && <span className="text-[10px] text-red-600 font-bold">{errors.name.message}</span>}
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                    <Mail className="w-4 h-4 text-cyan-400" /> Email Address
+                  <label className="text-xs font-semibold text-slate-750 flex items-center gap-1.5">
+                    <Mail className="w-4 h-4 text-sky-600" /> Email Address
                   </label>
                   <input
                     type="email"
-                    className={`px-4 py-2.5 text-sm glass-input text-white ${errors.email ? 'border-red-500/50' : ''}`}
+                    className={`px-4 py-2.5 text-sm glass-input text-slate-900 ${errors.email ? 'border-red-500/50' : ''}`}
                     {...register('email')}
                   />
-                  {errors.email && <span className="text-[10px] text-red-400 font-medium">{errors.email.message}</span>}
+                  {errors.email && <span className="text-[10px] text-red-600 font-bold">{errors.email.message}</span>}
                 </div>
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                  <Briefcase className="w-4 h-4 text-emerald-400" /> Target Prep Headline
+                <label className="text-xs font-semibold text-slate-750 flex items-center gap-1.5">
+                  <Briefcase className="w-4 h-4 text-emerald-600" /> Target Prep Headline
                 </label>
                 <input
                   type="text"
-                  className={`px-4 py-2.5 text-sm glass-input text-white ${errors.headline ? 'border-red-500/50' : ''}`}
+                  className={`px-4 py-2.5 text-sm glass-input text-slate-900 ${errors.headline ? 'border-red-500/50' : ''}`}
                   {...register('headline')}
                 />
-                {errors.headline && <span className="text-[10px] text-red-400 font-medium">{errors.headline.message}</span>}
+                {errors.headline && <span className="text-[10px] text-red-600 font-bold">{errors.headline.message}</span>}
               </div>
 
               <div className="pt-2 flex justify-end">
@@ -135,10 +135,10 @@ const Profile: React.FC = () => {
           </Card>
 
           {/* Achievement Trophy case */}
-          <Card className="border-white/5 space-y-4">
+          <Card className="border-slate-200/50 space-y-4 shadow-sm">
             <div>
-              <h3 className="text-xs uppercase font-black text-slate-400 tracking-wider">Unlocked Prep Badges</h3>
-              <p className="text-[10px] text-slate-500">Milestones achieved during active mock interview cycles</p>
+              <h3 className="text-xs uppercase font-black text-slate-700 tracking-wider">Unlocked Prep Badges</h3>
+              <p className="text-[10px] text-slate-600 font-semibold">Milestones achieved during active mock interview cycles</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -148,16 +148,16 @@ const Profile: React.FC = () => {
                   className={`p-3.5 rounded-xl border flex gap-3.5 items-center relative overflow-hidden transition-all ${
                     ach.unlocked 
                       ? 'border-violet-500/20 bg-violet-600/5 hover:border-violet-500/35' 
-                      : 'border-white/5 bg-slate-900/20 opacity-50'
+                      : 'border-slate-200/50 bg-slate-100/30 opacity-60'
                   }`}
                 >
                   <div className="text-2xl flex-shrink-0 select-none">{ach.icon}</div>
                   <div className="space-y-0.5">
-                    <h4 className="text-xs font-bold text-white flex items-center gap-2">
+                    <h4 className="text-xs font-bold text-slate-900 flex items-center gap-2">
                       {ach.title}
-                      {ach.unlocked && <Sparkles className="w-3.5 h-3.5 text-violet-400" />}
+                      {ach.unlocked && <Sparkles className="w-3.5 h-3.5 text-violet-500" />}
                     </h4>
-                    <p className="text-[10px] text-slate-400 leading-relaxed font-medium">
+                    <p className="text-[10px] text-slate-600 leading-relaxed font-semibold">
                       {ach.desc}
                     </p>
                   </div>

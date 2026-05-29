@@ -44,7 +44,7 @@ export const InterviewControls: React.FC<InterviewControlsProps> = ({
   onEnd,
 }) => {
   return (
-    <div className="glass-panel px-6 py-4 rounded-2xl flex flex-wrap gap-4 items-center justify-between border-white/10 shadow-2xl">
+    <div className="glass-panel px-6 py-4 rounded-2xl flex flex-wrap gap-4 items-center justify-between border border-slate-200/50 shadow-2xl">
       {/* Mic and Camera switches */}
       <div className="flex items-center gap-2">
         <Button
@@ -55,7 +55,7 @@ export const InterviewControls: React.FC<InterviewControlsProps> = ({
           title={cameraEnabled ? 'Turn off camera' : 'Turn on camera'}
           disabled={isGeneratingNext}
         >
-          {cameraEnabled ? <Video className="w-4.5 h-4.5 text-cyan-400" /> : <VideoOff className="w-4.5 h-4.5 text-pink-400" />}
+          {cameraEnabled ? <Video className="w-4.5 h-4.5 text-violet-600" /> : <VideoOff className="w-4.5 h-4.5 text-rose-500" />}
         </Button>
         <Button
           variant="ghost"
@@ -65,7 +65,7 @@ export const InterviewControls: React.FC<InterviewControlsProps> = ({
           title={micEnabled ? 'Mute microphone' : 'Unmute microphone'}
           disabled={isGeneratingNext}
         >
-          {micEnabled ? <Mic className="w-4.5 h-4.5 text-cyan-400" /> : <MicOff className="w-4.5 h-4.5 text-pink-400" />}
+          {micEnabled ? <Mic className="w-4.5 h-4.5 text-violet-600" /> : <MicOff className="w-4.5 h-4.5 text-rose-500" />}
         </Button>
       </div>
 
@@ -76,7 +76,7 @@ export const InterviewControls: React.FC<InterviewControlsProps> = ({
             variant="secondary"
             size="sm"
             onClick={onResume}
-            icon={<Play className="w-4 h-4 text-emerald-400" />}
+            icon={<Play className="w-4 h-4 text-emerald-600" />}
             className="rounded-xl px-4 py-2"
             disabled={isGeneratingNext}
           >
@@ -87,7 +87,7 @@ export const InterviewControls: React.FC<InterviewControlsProps> = ({
             variant="secondary"
             size="sm"
             onClick={onPause}
-            icon={<Pause className="w-4 h-4 text-violet-400" />}
+            icon={<Pause className="w-4 h-4 text-violet-600" />}
             className="rounded-xl px-4 py-2"
             disabled={isGeneratingNext}
           >
@@ -102,8 +102,8 @@ export const InterviewControls: React.FC<InterviewControlsProps> = ({
             onClick={onGenerateNext}
             loading={isGeneratingNext}
             disabled={isGeneratingNext || !isAnswerSubmitted}
-            icon={<SkipForward className="w-4 h-4 text-cyan-300 animate-pulse" />}
-            className="rounded-xl px-4 py-2 bg-gradient-to-r from-violet-600 to-cyan-500 border-none text-white hover:opacity-90 shadow-md shadow-violet-500/10"
+            icon={<SkipForward className="w-4 h-4 text-white animate-pulse" />}
+            className="rounded-xl px-4 py-2 bg-gradient-to-r from-violet-600 to-indigo-600 border-none text-white hover:opacity-90 shadow-md shadow-violet-500/20"
             title={!isAnswerSubmitted ? "Please submit your answer first" : "Generate the next customized question"}
           >
             Generate Next Question

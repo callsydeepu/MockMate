@@ -16,13 +16,13 @@ export const ConfidenceMeter: React.FC<ConfidenceMeterProps> = ({
   const chartData = history.map((val, idx) => ({ time: idx, score: val }));
 
   return (
-    <Card className="border-white/5 space-y-4">
-      <div className="flex justify-between items-center pb-2 border-b border-white/5">
+    <Card className="border-slate-200/50 space-y-4">
+      <div className="flex justify-between items-center pb-2 border-b border-slate-200/50">
         <div>
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">Real-time Confidence</span>
+          <span className="text-[10px] uppercase font-bold text-slate-600 tracking-wider block">Real-time Confidence</span>
           <span className="text-[8px] text-slate-500 font-mono">Facial expression & posture scan</span>
         </div>
-        <span className="text-xl font-display font-black text-cyan-400 text-glow-cyan">
+        <span className="text-xl font-display font-black text-sky-600">
           {score}%
         </span>
       </div>
@@ -30,7 +30,7 @@ export const ConfidenceMeter: React.FC<ConfidenceMeterProps> = ({
       {/* Main Gauge Progress */}
       <div className="space-y-1.5">
         <ProgressBar value={score} color="cyan" />
-        <div className="flex justify-between text-[9px] text-slate-500 font-mono">
+        <div className="flex justify-between text-[9px] text-slate-500 font-mono font-semibold">
           <span>Tense</span>
           <span>Steady</span>
           <span>Poised</span>
@@ -38,7 +38,7 @@ export const ConfidenceMeter: React.FC<ConfidenceMeterProps> = ({
       </div>
 
       {/* Small fluctuation line sparkline */}
-      <div className="h-12 w-full bg-slate-950/40 rounded-xl overflow-hidden border border-white/5">
+      <div className="h-12 w-full bg-white/50 rounded-xl overflow-hidden border border-slate-200/50">
         {chartData.length > 1 ? (
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={chartData} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>

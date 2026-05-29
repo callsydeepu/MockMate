@@ -66,7 +66,7 @@ const ForgotPassword: React.FC = () => {
       </form>
 
       <div className="mt-6 text-center text-xs">
-        <Link to="/login" className="inline-flex items-center gap-1.5 text-slate-400 hover:text-white font-semibold transition-colors">
+        <Link to="/login" className="inline-flex items-center gap-1.5 text-slate-600 hover:text-slate-900 font-bold transition-colors">
           <ArrowLeft className="w-3.5 h-3.5" />
           Back to Sign In
         </Link>

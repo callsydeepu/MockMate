@@ -16,7 +16,7 @@ export const WebcamPanel: React.FC<WebcamPanelProps> = ({
   const webcamRef = useRef<Webcam>(null);
 
   return (
-    <div className="relative aspect-video w-full rounded-2xl border border-white/10 bg-slate-950 overflow-hidden shadow-2xl">
+    <div className="relative aspect-video w-full rounded-2xl border border-slate-200/50 bg-slate-950 overflow-hidden shadow-2xl">
       {enabled ? (
         <>
           {/* Main Webcam Feed */}
@@ -59,11 +59,11 @@ export const WebcamPanel: React.FC<WebcamPanelProps> = ({
         </>
       ) : (
         /* Video Disabled State */
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-slate-500 bg-slate-950/90 select-none">
-          <div className="w-16 h-16 rounded-full bg-slate-900 border border-white/5 flex items-center justify-center">
-            <VideoOff className="w-6 h-6 text-slate-400" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-slate-300 bg-slate-950/90 select-none">
+          <div className="w-16 h-16 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center">
+            <VideoOff className="w-6 h-6 text-slate-350" />
           </div>
-          <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
+          <span className="text-xs font-bold uppercase tracking-widest text-slate-300">
             Biometric camera offline
           </span>
         </div>

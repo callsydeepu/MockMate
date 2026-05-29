@@ -313,32 +313,32 @@ const InterviewRoom: React.FC = () => {
     return (
       <div className="max-w-2xl mx-auto space-y-6 pt-6">
         <div>
-          <h1 className="text-xl md:text-2xl font-display font-extrabold text-white flex items-center gap-2">
-            Configure Interview Space <Sparkles className="w-5 h-5 text-violet-400" />
+          <h1 className="text-xl md:text-2xl font-display font-extrabold text-slate-900 flex items-center gap-2">
+            Configure Interview Space <Sparkles className="w-5 h-5 text-violet-600 animate-pulse" />
           </h1>
-          <p className="text-slate-400 text-xs font-medium">
+          <p className="text-slate-600 text-xs font-semibold">
             Choose your parameters to initialize target question banks and biometric modules.
           </p>
         </div>
 
         {/* Segmented tab selection */}
-        <div className="flex bg-slate-900/60 p-1 rounded-xl border border-white/5 w-full">
+        <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200/50 w-full">
           <button
             onClick={() => setActiveTab('standard')}
-            className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all ${
+            className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
               activeTab === 'standard'
-                ? 'bg-violet-600 text-white shadow-lg shadow-violet-500/20'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-violet-600 text-white shadow-md shadow-violet-500/20'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             Standard Mocks Bank
           </button>
           <button
             onClick={() => setActiveTab('ai')}
-            className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all flex justify-center items-center gap-1.5 ${
+            className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all flex justify-center items-center gap-1.5 cursor-pointer ${
               activeTab === 'ai'
-                ? 'bg-violet-600 text-white shadow-lg shadow-violet-500/20'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-violet-600 text-white shadow-md shadow-violet-500/20'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <Zap className="w-3.5 h-3.5" /> AI Grok Coach (Beta)
@@ -346,17 +346,17 @@ const InterviewRoom: React.FC = () => {
         </div>
 
         {activeTab === 'standard' ? (
-          <Card className="border-white/5 space-y-5 relative">
+          <Card className="border-slate-200/50 space-y-5 relative shadow-sm">
             <div className="absolute top-[-10%] right-[-10%] w-32 h-32 bg-violet-600/5 blur-2xl rounded-full" />
             {/* Company select */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                <Building2 className="w-4 h-4 text-violet-400" /> Target Company
+              <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                <Building2 className="w-4 h-4 text-violet-500" /> Target Company
               </label>
               <select
                 value={company}
                 onChange={(e) => setCompany(e.target.value)}
-                className="w-full px-4 py-2.5 text-xs glass-input bg-slate-900 border border-white/10 text-white rounded-lg focus:outline-none focus:border-violet-500"
+                className="w-full px-4 py-2.5 text-xs bg-white/80 border border-slate-200/60 text-slate-900 rounded-lg focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10"
               >
                 <option value="Google">Google</option>
                 <option value="Amazon">Amazon</option>
@@ -369,13 +369,13 @@ const InterviewRoom: React.FC = () => {
 
             {/* Role select */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                <UserCircle className="w-4 h-4 text-cyan-400" /> Role
+              <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                <UserCircle className="w-4 h-4 text-sky-600" /> Role
               </label>
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                className="w-full px-4 py-2.5 text-xs glass-input bg-slate-900 border border-white/10 text-white rounded-lg focus:outline-none"
+                className="w-full px-4 py-2.5 text-xs bg-white/80 border border-slate-200/60 text-slate-900 rounded-lg focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10"
               >
                 <option value="Software Engineer">Software Engineer</option>
                 <option value="Frontend Engineer">Frontend Engineer</option>
@@ -387,13 +387,13 @@ const InterviewRoom: React.FC = () => {
 
             {/* Duration select */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                <Play className="w-4 h-4 text-cyan-400" /> Interview Duration
+              <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                <Play className="w-4 h-4 text-sky-600" /> Interview Duration
               </label>
               <select
                 value={duration}
                 onChange={(e) => setDuration(e.target.value)}
-                className="w-full px-4 py-2.5 text-xs glass-input bg-slate-900 border border-white/10 text-white rounded-lg focus:outline-none"
+                className="w-full px-4 py-2.5 text-xs bg-white/80 border border-slate-200/60 text-slate-900 rounded-lg focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10"
               >
                 <option value="15">15 minutes</option>
                 <option value="30">30 minutes</option>
@@ -408,7 +408,7 @@ const InterviewRoom: React.FC = () => {
                 variant="primary"
                 onClick={handleStart}
                 icon={<Play className="w-4 h-4" />}
-                className="w-full py-3 rounded-xl font-bold"
+                className="w-full py-3 rounded-xl font-bold shadow-md shadow-violet-500/10"
               >
                 Initialize Mock Room
               </Button>
@@ -416,59 +416,59 @@ const InterviewRoom: React.FC = () => {
           </Card>
         ) : (
           <div className="space-y-6">
-            <Card className="border-white/5 space-y-5 bg-slate-950/20 backdrop-blur-sm relative">
+            <Card className="border-slate-200/50 space-y-5 bg-white/70 backdrop-blur-sm relative shadow-sm">
               <div className="absolute top-[-10%] right-[-10%] w-32 h-32 bg-cyan-400/5 blur-2xl rounded-full" />
               {/* Role */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                  <UserCircle className="w-4 h-4 text-cyan-400" /> Target Role / Profile
+                <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                  <UserCircle className="w-4 h-4 text-sky-600" /> Target Role / Profile
                 </label>
                 <input
                   type="text"
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
                   placeholder="e.g. Frontend Engineer, Senior Fullstack Dev"
-                  className="w-full px-4 py-2.5 text-xs glass-input bg-slate-900 border border-white/10 text-white rounded-lg focus:outline-none focus:border-violet-500"
+                  className="w-full px-4 py-2.5 text-xs bg-white/80 border border-slate-200/60 text-slate-900 rounded-lg focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10"
                 />
               </div>
 
               {/* Company */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                  <Building2 className="w-4 h-4 text-violet-400" /> Target Company
+                <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                  <Building2 className="w-4 h-4 text-violet-500" /> Target Company
                 </label>
                 <input
                   type="text"
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
                   placeholder="e.g. Google, Stripe, OpenAI"
-                  className="w-full px-4 py-2.5 text-xs glass-input bg-slate-900 border border-white/10 text-white rounded-lg focus:outline-none focus:border-violet-500"
+                  className="w-full px-4 py-2.5 text-xs bg-white/80 border border-slate-200/60 text-slate-900 rounded-lg focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10"
                 />
               </div>
 
               {/* Tech Stack */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                  <FileText className="w-4 h-4 text-emerald-400" /> Core Tech Stack
+                <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                  <FileText className="w-4 h-4 text-emerald-600" /> Core Tech Stack
                 </label>
                 <input
                   type="text"
                   value={techStack}
                   onChange={(e) => setTechStack(e.target.value)}
                   placeholder="e.g. React, Node.js, TypeScript, Docker"
-                  className="w-full px-4 py-2.5 text-xs glass-input bg-slate-900 border border-white/10 text-white rounded-lg focus:outline-none focus:border-violet-500"
+                  className="w-full px-4 py-2.5 text-xs bg-white/80 border border-slate-200/60 text-slate-900 rounded-lg focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10"
                 />
               </div>
 
               {/* Difficulty select */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                  <Sparkles className="w-4 h-4 text-violet-400" /> Complexity / Difficulty
+                <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                  <Sparkles className="w-4 h-4 text-violet-500" /> Complexity / Difficulty
                 </label>
                 <select
                   value={difficulty}
                   onChange={(e) => setDifficulty(e.target.value as any)}
-                  className="w-full px-4 py-2.5 text-xs glass-input bg-slate-900 border border-white/10 text-white rounded-lg focus:outline-none focus:border-violet-500"
+                  className="w-full px-4 py-2.5 text-xs bg-white/80 border border-slate-200/60 text-slate-900 rounded-lg focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10"
                 >
                   <option value="easy">Simple / Junior</option>
                   <option value="medium">Moderate / Mid-Level</option>
@@ -478,13 +478,13 @@ const InterviewRoom: React.FC = () => {
 
               {/* Duration select */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                  <Play className="w-4 h-4 text-cyan-400" /> Duration Limit
+                <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                  <Play className="w-4 h-4 text-sky-600" /> Duration Limit
                 </label>
                 <select
                   value={duration}
                   onChange={(e) => setDuration(e.target.value)}
-                  className="w-full px-4 py-2.5 text-xs glass-input bg-slate-900 border border-white/10 text-white rounded-lg focus:outline-none focus:border-violet-500"
+                  className="w-full px-4 py-2.5 text-xs bg-white/80 border border-slate-200/60 text-slate-900 rounded-lg focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10"
                 >
                   <option value="15">15 minutes</option>
                   <option value="30">30 minutes</option>
@@ -494,8 +494,8 @@ const InterviewRoom: React.FC = () => {
               </div>
 
               {/* Prompt Customizer Preview */}
-              <div className="p-3 rounded-lg border border-white/5 bg-slate-950/40 text-[10px] text-slate-400 font-mono space-y-1">
-                <span className="text-[9px] uppercase font-bold text-violet-400 block tracking-wider font-sans">Prompt Template Builder Preview</span>
+              <div className="p-3 rounded-lg border border-slate-200/50 bg-slate-50/70 text-[10px] text-slate-600 font-mono space-y-1">
+                <span className="text-[9px] uppercase font-bold text-violet-600 block tracking-wider font-sans">Prompt Template Builder Preview</span>
                 <p className="leading-relaxed">
                   "Compile 3 custom questions matching targeting role {role || '[Role]'} at {company || '[Company]'} centered around technologies [{techStack || '[Tech Stack]'}] on a {difficulty} scale."
                 </p>
@@ -508,7 +508,7 @@ const InterviewRoom: React.FC = () => {
                   loading={isGeneratingAI}
                   onClick={handleGenerateAI}
                   icon={<Zap className="w-4 h-4" />}
-                  className="w-full py-3 rounded-xl font-bold bg-gradient-to-r from-violet-600 to-cyan-500 border-none text-white hover:opacity-90 shadow-lg shadow-violet-500/10"
+                  className="w-full py-3 rounded-xl font-bold bg-gradient-to-r from-violet-650 to-sky-600 border-none text-white hover:opacity-90 shadow-md shadow-violet-500/10"
                 >
                   Generate AI Interview Questions
                 </Button>
@@ -517,25 +517,25 @@ const InterviewRoom: React.FC = () => {
 
             {/* AI Questions Preview Panel */}
             {aiQuestions && aiQuestions.length > 0 && (
-              <Card className="border-white/5 bg-slate-950/30 p-6 space-y-5">
+              <Card className="border-slate-200/50 bg-white/70 p-6 space-y-5 shadow-sm animate-fade-in">
                 <div className="space-y-1">
-                  <h3 className="text-xs uppercase font-black text-slate-300 tracking-wider flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-violet-400" /> Compiled Questions Preview
+                  <h3 className="text-xs uppercase font-black text-slate-700 tracking-wider flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-violet-500" /> Compiled Questions Preview
                   </h3>
-                  <p className="text-[10px] text-slate-500">AI generated questions specifically tailored for this prep</p>
+                  <p className="text-[10px] text-slate-600 font-semibold">AI generated questions specifically tailored for this prep</p>
                 </div>
 
                 <div className="space-y-4">
                   {aiQuestions.map((q, idx) => (
-                    <div key={idx} className="p-4 rounded-xl border border-white/5 bg-slate-900/30 space-y-2.5 relative">
+                    <div key={idx} className="p-4 rounded-xl border border-slate-200/50 bg-slate-50/70 space-y-2.5 relative">
                       <div className="flex justify-between items-center">
-                        <span className="text-[9px] font-mono text-cyan-400 uppercase font-bold">Q-0{idx + 1} • {q.category}</span>
-                        <span className="text-[9px] font-mono text-violet-400 uppercase font-bold">{q.difficulty}</span>
+                        <span className="text-[9px] font-mono text-sky-600 uppercase font-bold">Q-0{idx + 1} • {q.category}</span>
+                        <span className="text-[9px] font-mono text-violet-600 uppercase font-bold">{q.difficulty}</span>
                       </div>
-                      <p className="text-xs font-bold text-white leading-relaxed">"{q.text}"</p>
+                      <p className="text-xs font-bold text-slate-900 leading-relaxed">"{q.text}"</p>
                       
-                      <div className="p-2.5 rounded-lg border border-white/5 bg-slate-950/40 text-[10px] text-slate-400 space-y-1">
-                        <span className="text-[8px] font-mono text-cyan-400 uppercase font-bold block">Interviewer Tips</span>
+                      <div className="p-2.5 rounded-lg border border-slate-200/50 bg-white/50 text-[10px] text-slate-600 space-y-1 font-medium">
+                        <span className="text-[8px] font-mono text-sky-600 uppercase font-bold block">Interviewer Tips</span>
                         {q.tips.map((t, tIdx) => (
                           <p key={tIdx} className="leading-snug">• {t}</p>
                         ))}
@@ -549,7 +549,7 @@ const InterviewRoom: React.FC = () => {
                     variant="primary"
                     onClick={handleStartAIInterview}
                     icon={<Play className="w-4 h-4 animate-pulse" />}
-                    className="w-full py-3.5 rounded-xl font-bold bg-violet-600 hover:bg-violet-500 text-white"
+                    className="w-full py-3.5 rounded-xl font-bold bg-violet-600 hover:bg-violet-500 text-white shadow-md shadow-violet-500/10"
                   >
                     Initialize AI Mock Room
                   </Button>
@@ -571,18 +571,18 @@ const InterviewRoom: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Upper Status row */}
-      <div className="flex justify-between items-center bg-slate-950/40 p-4 rounded-xl border border-white/5">
+      <div className="flex justify-between items-center bg-white/80 p-4 rounded-2xl border border-slate-200/50 shadow-sm">
         <div className="flex items-center gap-2">
           <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
-          <span className="text-xs font-display font-extrabold text-white uppercase tracking-wider">
+          <span className="text-xs font-display font-extrabold text-slate-900 uppercase tracking-wider">
             {activeSession.companyName} SIMULATION ({activeSession.role})
           </span>
         </div>
         
         {/* Timer countdown (reusable common component) */}
-        <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400">
+        <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600 font-semibold">
           <span>Overall elapsed: {Math.floor(activeSession.elapsedTime / 60)}m</span>
-          <span className="px-2 py-1 bg-slate-900/80 rounded-lg border border-white/10">Duration: {activeSession.durationMinutes} mins</span>
+          <span className="px-2 py-1 bg-white border border-slate-200/60 rounded-lg text-slate-700">Duration: {activeSession.durationMinutes} mins</span>
         </div>
       </div>
 
@@ -607,13 +607,13 @@ const InterviewRoom: React.FC = () => {
         {/* RIGHT COLUMN: AI Interviewer card, Question tips, Live transcripts (7/12 grid) */}
         <div className="lg:col-span-7 space-y-4 flex flex-col h-full">
           {/* Fake AI Interviewer Avatar Card */}
-          <div className="p-4 rounded-2xl glass-card flex items-center gap-4 border-white/5">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-violet-600 to-cyan-400 flex items-center justify-center text-white font-black shadow-lg">
+          <div className="p-4 rounded-2xl glass-card flex items-center gap-4 border-slate-200/50 bg-white/70 shadow-sm">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-violet-600 to-sky-400 flex items-center justify-center text-white font-black shadow-lg">
               AI
             </div>
             <div>
-              <span className="text-xs font-bold text-white block">Interviewer Avatar (Agent X-1)</span>
-              <span className="text-[10px] text-slate-500 block leading-relaxed">
+              <span className="text-xs font-bold text-slate-900 block">Interviewer Avatar (Agent X-1)</span>
+              <span className="text-[10px] text-slate-600 block leading-relaxed font-semibold">
                 Adapts questions to technical depth, assessing communication fluency.
               </span>
             </div>
@@ -626,15 +626,15 @@ const InterviewRoom: React.FC = () => {
           />
 
           {/* Typed Answer Response Panel */}
-          <div className="glass-card flex flex-col justify-between border-white/5 p-5 space-y-4 rounded-2xl bg-slate-900/40 backdrop-blur-md">
-            <div className="flex justify-between items-center pb-2 border-b border-white/5">
-              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Your Response Space</span>
+          <div className="glass-card flex flex-col justify-between border-slate-200/50 p-5 space-y-4 rounded-2xl bg-white/70 backdrop-blur-md shadow-sm">
+            <div className="flex justify-between items-center pb-2 border-b border-slate-200/50">
+              <span className="text-[10px] uppercase font-bold text-slate-600 tracking-wider">Your Response Space</span>
               {isAnswerSubmitted ? (
-                <span className="inline-flex items-center gap-1 text-[8px] font-bold text-emerald-400 border border-emerald-400/20 bg-emerald-400/5 px-2 py-0.5 rounded uppercase font-mono">
+                <span className="inline-flex items-center gap-1 text-[8px] font-bold text-emerald-700 border border-emerald-400/20 bg-emerald-50 px-2 py-0.5 rounded uppercase font-mono">
                   Saved & Synced
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 text-[8px] font-bold text-yellow-400 border border-yellow-400/20 bg-yellow-400/5 px-2 py-0.5 rounded uppercase font-mono">
+                <span className="inline-flex items-center gap-1 text-[8px] font-bold text-amber-700 border border-amber-400/20 bg-amber-50 px-2 py-0.5 rounded uppercase font-mono">
                   Awaiting Submission
                 </span>
               )}
@@ -645,22 +645,22 @@ const InterviewRoom: React.FC = () => {
               onChange={(e) => setTypedAnswer(e.target.value)}
               disabled={isSubmittingAnswer || activeSession.isPaused}
               placeholder="Type your structured, comprehensive answer here... Try to elaborate on technical edge cases, architecture decisions, and explain your thought process clearly!"
-              className="w-full flex-grow p-4 text-xs bg-slate-950/60 border border-white/10 rounded-xl text-white focus:outline-none focus:border-violet-500 disabled:opacity-50 min-h-[140px] resize-none leading-relaxed font-sans"
+              className="w-full flex-grow p-4 text-xs bg-white/80 border border-slate-200/60 rounded-xl text-slate-900 focus:outline-none focus:border-violet-500 disabled:opacity-50 min-h-[140px] resize-none leading-relaxed font-sans placeholder:text-slate-400 font-medium"
             />
 
-            <div className="flex justify-between items-center pt-2 border-t border-white/5">
+            <div className="flex justify-between items-center pt-2 border-t border-slate-200/50">
               <div className="flex items-center gap-2">
-                <span className="text-[9px] text-slate-500 font-mono">
+                <span className="text-[9px] text-slate-600 font-semibold font-mono">
                   Character count: {typedAnswer.length}
                 </span>
                 {isListening && (
-                  <span className="inline-flex items-center gap-1.5 text-[9px] font-bold text-cyan-400 font-mono ml-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+                  <span className="inline-flex items-center gap-1.5 text-[9px] font-bold text-sky-600 font-mono ml-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-ping" />
                     Listening...
                   </span>
                 )}
                 {micPermissionError && (
-                  <span className="text-[9px] text-red-400 font-medium ml-2">
+                  <span className="text-[9px] text-red-650 font-bold ml-2">
                     {micPermissionError}
                   </span>
                 )}
@@ -672,10 +672,10 @@ const InterviewRoom: React.FC = () => {
                     type="button"
                     onClick={toggleListening}
                     disabled={activeSession.isPaused || isSubmittingAnswer}
-                    className={`p-2.5 rounded-xl border flex items-center justify-center transition-all duration-300 ${
+                    className={`p-2.5 rounded-xl border flex items-center justify-center transition-all duration-300 cursor-pointer ${
                       isListening
-                        ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20 shadow-[0_0_12px_rgba(34,211,238,0.2)] animate-pulse'
-                        : 'bg-slate-950/60 border-white/10 text-slate-400 hover:text-white hover:border-white/20'
+                        ? 'bg-sky-50 border-sky-300 text-sky-600 hover:bg-sky-100 shadow-[0_0_12px_rgba(2,132,197,0.15)] animate-pulse'
+                        : 'bg-white/80 border-slate-200/60 text-slate-500 hover:text-slate-800 hover:border-slate-300'
                     }`}
                     title={isListening ? "Stop Voice Transcription" : "Start Voice Transcription"}
                   >
@@ -689,7 +689,7 @@ const InterviewRoom: React.FC = () => {
                   onClick={handleSubmitAnswerClick}
                   loading={isSubmittingAnswer}
                   disabled={isSubmittingAnswer || activeSession.isPaused || !typedAnswer.trim()}
-                  className="rounded-xl px-4 py-2 text-xs font-bold bg-violet-600 hover:bg-violet-500 transition-all shadow-md shadow-violet-500/10"
+                  className="rounded-xl px-4 py-2 text-xs font-bold shadow-md shadow-violet-500/10"
                 >
                   {isAnswerSubmitted ? "Update Stored Answer" : "Submit Answer"}
                 </Button>
@@ -699,18 +699,18 @@ const InterviewRoom: React.FC = () => {
 
           {/* Previous Answers Timeline Preview */}
           {activeSession.currentQuestionIndex > 0 && (
-            <div className="glass-card p-5 border-white/5 space-y-4 rounded-2xl bg-slate-900/30">
-              <h3 className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Previous Responses Timeline</h3>
+            <div className="glass-card p-5 border-slate-200/50 space-y-4 rounded-2xl bg-white/70 shadow-sm">
+              <h3 className="text-[10px] uppercase font-bold text-slate-600 tracking-wider">Previous Responses Timeline</h3>
               <div className="space-y-4 max-h-[160px] overflow-y-auto scrollbar-thin pr-1">
                 {activeSession.questions.slice(0, activeSession.currentQuestionIndex).map((q, idx) => (
-                  <div key={q.id} className="p-4 rounded-xl border border-white/5 bg-slate-950/40 space-y-2.5 text-xs">
-                    <div className="flex justify-between items-center text-[9px] font-mono text-cyan-400 uppercase font-bold">
+                  <div key={q.id} className="p-4 rounded-xl border border-slate-200/50 bg-slate-50/70 space-y-2.5 text-xs">
+                    <div className="flex justify-between items-center text-[9px] font-mono text-sky-600 uppercase font-bold">
                       <span>Question 0{idx + 1} • {q.category}</span>
-                      <span className="text-slate-500">{q.difficulty}</span>
+                      <span className="text-slate-500 font-semibold">{q.difficulty}</span>
                     </div>
-                    <p className="text-slate-300 font-bold leading-relaxed">"{q.text}"</p>
-                    <div className="p-3 rounded-lg border border-white/5 bg-slate-900/30 text-[11px] text-emerald-400 leading-relaxed font-sans">
-                      <span className="text-[8px] font-mono text-emerald-400 uppercase font-black block tracking-wider mb-1">Your Submitted Response</span>
+                    <p className="text-slate-800 font-bold leading-relaxed">"{q.text}"</p>
+                    <div className="p-3 rounded-lg border border-emerald-200 bg-emerald-50 text-[11px] text-emerald-800 leading-relaxed font-semibold">
+                      <span className="text-[8px] font-mono text-emerald-700 uppercase font-black block tracking-wider mb-1">Your Submitted Response</span>
                       "{activeSession.transcripts[q.id] || '[No answer recorded]'}"
                     </div>
                   </div>

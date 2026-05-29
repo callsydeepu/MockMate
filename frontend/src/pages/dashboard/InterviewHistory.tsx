@@ -156,7 +156,7 @@ const InterviewHistory: React.FC = () => {
                   className={`w-7 h-7 rounded-xl text-xs font-mono font-bold transition-all border ${
                     currentPage === idx + 1
                       ? 'bg-violet-600 text-white border-violet-500 shadow-sm shadow-violet-500/10'
-                      : 'border-slate-200 bg-white text-slate-655 hover:bg-slate-50 hover:text-slate-900 shadow-sm cursor-pointer'
+                      : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900 shadow-sm cursor-pointer'
                   }`}
                 >
                   {idx + 1}

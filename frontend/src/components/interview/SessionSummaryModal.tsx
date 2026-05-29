@@ -47,7 +47,7 @@ export const SessionSummaryModal: React.FC<SessionSummaryModalProps> = ({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="w-full max-w-md rounded-3xl glass-panel border border-white/10 shadow-2xl overflow-hidden p-6 md:p-8"
+            className="w-full max-w-md rounded-3xl glass-panel border border-slate-200/50 shadow-2xl overflow-hidden p-6 md:p-8"
           >
             {isAnalyzing ? (
               /* Scoring analysis loaders */
@@ -57,8 +57,8 @@ export const SessionSummaryModal: React.FC<SessionSummaryModalProps> = ({
                   <div className="absolute inset-0 rounded-full border-4 border-t-violet-500 border-r-cyan-400 animate-spin" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="font-display font-extrabold text-lg text-white">AI Engine Scoring...</h3>
-                  <p className="text-xs text-slate-400 font-mono h-4">
+                  <h3 className="font-display font-extrabold text-lg text-slate-900">AI Engine Scoring...</h3>
+                  <p className="text-xs text-slate-500 font-mono h-4">
                     {steps[analysisStep]}
                   </p>
                 </div>
@@ -71,28 +71,28 @@ export const SessionSummaryModal: React.FC<SessionSummaryModalProps> = ({
                     <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-600/25">
                       <CheckCircle2 className="w-6 h-6 text-white" />
                     </div>
-                    <h3 className="font-display font-extrabold text-xl text-white">Interview Complete!</h3>
-                    <p className="text-xs text-slate-400">
+                    <h3 className="font-display font-extrabold text-xl text-slate-900">Interview Complete!</h3>
+                    <p className="text-xs text-slate-500">
                       Here is the summary of your {report.companyName} mock trial
                     </p>
                   </div>
 
                   {/* Primary overall score circle */}
-                  <div className="flex flex-col items-center justify-center p-6 rounded-2xl bg-white/3 border border-white/5 text-center">
+                  <div className="flex flex-col items-center justify-center p-6 rounded-2xl bg-slate-50/70 border border-slate-200/50 text-center">
                     <span className="text-[10px] uppercase font-bold text-slate-500 tracking-widest block mb-1">OVERALL PERFORMANCE</span>
-                    <div className="text-4xl font-display font-black text-white mb-2">{report.overallScore}%</div>
+                    <div className="text-4xl font-display font-black text-slate-900 mb-2">{report.overallScore}%</div>
                     <ScoreBadge score={report.overallScore} size="sm" />
                   </div>
 
                   {/* Vectors progress */}
-                  <div className="grid grid-cols-2 gap-4 text-xs font-semibold text-slate-300">
-                    <div className="p-3.5 rounded-xl border border-white/5 bg-slate-900/40 space-y-1">
+                  <div className="grid grid-cols-2 gap-4 text-xs font-semibold text-slate-700">
+                    <div className="p-3.5 rounded-xl border border-slate-200/50 bg-slate-50/70 space-y-1">
                       <span className="text-[10px] text-slate-500 block uppercase font-bold">Confidence</span>
-                      <div className="text-base font-bold text-white">{report.confidenceScore}%</div>
+                      <div className="text-base font-bold text-slate-900">{report.confidenceScore}%</div>
                     </div>
-                    <div className="p-3.5 rounded-xl border border-white/5 bg-slate-900/40 space-y-1">
+                    <div className="p-3.5 rounded-xl border border-slate-200/50 bg-slate-50/70 space-y-1">
                       <span className="text-[10px] text-slate-500 block uppercase font-bold">Technical</span>
-                      <div className="text-base font-bold text-white">{report.technicalScore}%</div>
+                      <div className="text-base font-bold text-slate-900">{report.technicalScore}%</div>
                     </div>
                   </div>
 

@@ -23,11 +23,11 @@ export const TimerDisplay: React.FC<TimerDisplayProps> = ({
     <div
       className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border font-mono font-bold text-sm backdrop-filter backdrop-blur-sm transition-all duration-300 ${
         isLow
-          ? 'bg-red-500/10 border-red-500/30 text-red-400 animate-pulse'
-          : 'bg-slate-900/60 border-white/10 text-slate-300'
+          ? 'bg-red-50 border-red-200 text-red-650 animate-pulse'
+          : 'bg-white/80 border-slate-200/60 text-slate-700'
       }`}
     >
-      <Timer className={`w-4 h-4 ${isLow ? 'text-red-400' : 'text-cyan-400'}`} />
+      <Timer className={`w-4 h-4 ${isLow ? 'text-red-600' : 'text-sky-600'}`} />
       <span>{formattedTime}</span>
     </div>
   );

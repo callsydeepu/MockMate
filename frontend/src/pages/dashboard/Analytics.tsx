@@ -73,7 +73,7 @@ const Analytics: React.FC = () => {
 
       {/* 1. SCORE PROGRESSION AREA */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2 space-y-4 border-slate-200/60 shadow-lg">
+        <Card className="lg:col-span-2 space-y-4 border-slate-200/50 shadow-lg">
           <div>
             <h3 className="text-xs uppercase font-black text-slate-500 tracking-wider">Historical Progression</h3>
             <p className="text-[10px] text-slate-500 font-semibold">Longitudinal review of key interview domains</p>
@@ -82,8 +82,8 @@ const Analytics: React.FC = () => {
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(226,232,240,0.6)" />
-                <XAxis dataKey="name" stroke="#64748b" fontSize={10} tickLine={false} />
-                <YAxis stroke="#64748b" fontSize={10} domain={[50, 100]} tickLine={false} />
+                <XAxis dataKey="name" stroke="#475569" fontSize={10} tickLine={false} />
+                <YAxis stroke="#475569" fontSize={10} domain={[50, 100]} tickLine={false} />
                 <Tooltip contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', borderColor: 'rgba(226, 232, 240, 0.8)', color: '#0f172a', borderRadius: '12px' }} />
                 <Legend wrapperStyle={{ fontSize: '10px' }} />
                 <Line type="monotone" dataKey="Overall" stroke="#7c3aed" strokeWidth={3} dot={{ r: 4 }} />
@@ -95,7 +95,7 @@ const Analytics: React.FC = () => {
         </Card>
 
         {/* Dynamic speech metrics progress */}
-        <Card className="space-y-4 border-slate-200/60 shadow-lg flex flex-col justify-between">
+        <Card className="space-y-4 border-slate-200/50 shadow-lg flex flex-col justify-between">
           <div className="space-y-4">
             <div>
               <h3 className="text-xs uppercase font-black text-slate-500 tracking-wider">Fluency Parameters</h3>
@@ -140,7 +140,7 @@ const Analytics: React.FC = () => {
       {/* 2. BAR CHART FILLER WORDS & EYE CONTACT */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Filler Words Histogram */}
-        <Card className="space-y-4 border-slate-200/60 shadow-lg">
+        <Card className="space-y-4 border-slate-200/50 shadow-lg">
           <div>
             <h3 className="text-xs uppercase font-black text-slate-500 tracking-wider">Filler word logs</h3>
             <p className="text-[10px] text-slate-500 font-semibold">Frequency counts of vocal crumbs per mock trial</p>
@@ -149,8 +149,8 @@ const Analytics: React.FC = () => {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={FILLER_WORDS_HISTORY} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(226,232,240,0.6)" />
-                <XAxis dataKey="name" stroke="#64748b" fontSize={10} tickLine={false} />
-                <YAxis stroke="#64748b" fontSize={10} tickLine={false} />
+                <XAxis dataKey="name" stroke="#475569" fontSize={10} tickLine={false} />
+                <YAxis stroke="#475569" fontSize={10} tickLine={false} />
                 <Tooltip contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', borderColor: 'rgba(226, 232, 240, 0.8)', color: '#0f172a', borderRadius: '12px' }} />
                 <Legend wrapperStyle={{ fontSize: '10px' }} />
                 <Bar dataKey="Um" fill="#7c3aed" radius={[4, 4, 0, 0]} />
@@ -162,7 +162,7 @@ const Analytics: React.FC = () => {
         </Card>
 
         {/* Eye Contact Area tracker */}
-        <Card className="space-y-4 border-slate-200/60 shadow-lg">
+        <Card className="space-y-4 border-slate-200/50 shadow-lg">
           <div>
             <h3 className="text-xs uppercase font-black text-slate-500 tracking-wider">Eye gaze stability</h3>
             <p className="text-[10px] text-slate-500 font-semibold">Camera alignment ratios over recent sessions</p>
@@ -177,8 +177,8 @@ const Analytics: React.FC = () => {
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(226,232,240,0.6)" />
-                <XAxis dataKey="name" stroke="#64748b" fontSize={10} tickLine={false} />
-                <YAxis stroke="#64748b" fontSize={10} domain={[50, 100]} tickLine={false} />
+                <XAxis dataKey="name" stroke="#475569" fontSize={10} tickLine={false} />
+                <YAxis stroke="#475569" fontSize={10} domain={[50, 100]} tickLine={false} />
                 <Tooltip contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', borderColor: 'rgba(226, 232, 240, 0.8)', color: '#0f172a', borderRadius: '12px' }} />
                 <Area type="monotone" dataKey="ratio" stroke="#10b981" strokeWidth={2.5} fillOpacity={1} fill="url(#colorGaze)" />
               </AreaChart>
@@ -189,10 +189,10 @@ const Analytics: React.FC = () => {
 
       {/* 3. STRENGTHS & WEAKNESSES BOXES */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="border-emerald-250 bg-emerald-50/50 shadow-sm shadow-emerald-500/5 space-y-4">
+        <Card className="border border-emerald-200 bg-emerald-50/30 shadow-sm shadow-emerald-500/5 space-y-4">
           <div>
-            <h4 className="text-xs uppercase font-black text-emerald-700 tracking-wider font-extrabold">Verified Strengths</h4>
-            <p className="text-[10px] text-emerald-600 font-semibold">Key metrics exceeding target values</p>
+            <h4 className="text-xs uppercase font-black text-emerald-800 tracking-wider font-extrabold">Verified Strengths</h4>
+            <p className="text-[10px] text-emerald-700 font-semibold">Key metrics exceeding target values</p>
           </div>
           <div className="space-y-2 text-xs text-slate-700 font-semibold leading-relaxed">
             <p className="flex items-center gap-2"><span className="text-emerald-600">✓</span> **Structured behavioral answers**: Demonstrates clear STAR logic flow.</p>
@@ -201,10 +201,10 @@ const Analytics: React.FC = () => {
           </div>
         </Card>
 
-        <Card className="border-pink-250 bg-pink-50/50 shadow-sm shadow-pink-500/5 space-y-4">
+        <Card className="border border-rose-200 bg-rose-50/30 shadow-sm shadow-pink-500/5 space-y-4">
           <div>
-            <h4 className="text-xs uppercase font-black text-pink-700 tracking-wider font-extrabold">Active Growth Areas</h4>
-            <p className="text-[10px] text-pink-600 font-semibold">Areas requiring focused practice rounds</p>
+            <h4 className="text-xs uppercase font-black text-rose-800 tracking-wider font-extrabold">Active Growth Areas</h4>
+            <p className="text-[10px] text-rose-700 font-semibold">Areas requiring focused practice rounds</p>
           </div>
           <div className="space-y-2 text-xs text-slate-700 font-semibold leading-relaxed">
             <p className="flex items-center gap-2"><span className="text-pink-600">⚡</span> **Coding spatial constraints**: Remember to discuss memory complexities.</p>
