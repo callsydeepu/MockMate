@@ -364,7 +364,6 @@ const LandingPage: React.FC = () => {
               <video
                 controls
                 preload="metadata"
-                poster="/demo-thumbnail.png"
                 className="w-full aspect-video rounded-2xl object-cover"
               >
                 <source src="/demo.mp4" type="video/mp4" />
